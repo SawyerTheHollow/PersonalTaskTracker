@@ -1,26 +1,25 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
+TextEditingController _nameController = TextEditingController();
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
       appBar: AppBar(
         toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        title: Text("Вход"),
+        title: Text("Регистрация"),
         centerTitle: true,
       ),
       body: Padding(
@@ -30,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Добро пожаловать",
+              "Создать аккаунт",
               style: TextStyle(
                 fontSize: 28,
                 color: Color(0xFF2F394A),
@@ -38,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Text(
-              "Введите E-mail и пароль для входа",
+              "Заполните поля для регистрации",
               style: TextStyle(fontSize: 15, color: Color(0xFFB8B8BA)),
             ),
             SizedBox(height: 60),
@@ -48,6 +47,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Введите ваше имя",
+                      labelStyle: TextStyle(color: Color(0xFF838993)),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide(color: myThemeColor),
+                      ),
+                    ),
+                    controller: _nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Введите ваше имя";
+                      }
+                    },
+                  ),
+                  SizedBox(height: 30),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: "Введите Email",
@@ -94,10 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if (_emailController.text == "validEmail" &&
-                            _passwordController.text == "validPassword") {
-                          //TODO Переход к главному экрану
-                        }
+                          //TODO Переход к главному экрану и сохранение ввода
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -116,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       backgroundColor: myThemeColor,
                     ),
                     child: Text(
-                      "Вход",
+                      "Регистрация",
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -126,22 +143,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Нет аккаунта? ",
+                          text: "Есть аккаунт? ",
                           style: TextStyle(
                             color: Color(0xFFB8B8BA),
                             fontSize: 17,
                           ),
                         ),
                         TextSpan(
-                          text: "Зарегистрироваться",
+                          text: "Войти",
                           style: TextStyle(
                             color: myThemeColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
-                              /*TODO Переход к регистрации*/
+                            ..onTap = () {
+                              Navigator.pop(context);
                             },
                         ),
                       ],
