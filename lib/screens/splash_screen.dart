@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
-import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
   final ApiClient apiClient;

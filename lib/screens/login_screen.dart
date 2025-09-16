@@ -1,7 +1,9 @@
-import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'register_screen.dart';
+import 'package:first_flutter_project/data/api/user.dart';
+import 'package:first_flutter_project/data/api/api_client.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -17,8 +19,6 @@ class LoginScreen extends StatefulWidget {
 
 const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
-//TextEditingController _emailController = TextEditingController();
-//TextEditingController _passwordController = TextEditingController();
 
 class _LoginScreenState extends State<LoginScreen> {
 
@@ -107,16 +107,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        if (_emailController.text == "validEmail" &&
-                            _passwordController.text == "validPassword") {
-                          //TODO Переход к главному экрану
-                        }
-                        /*else if (_emailController.text == registeredEmail &&
-                            _passwordController.text == "validPassword"){
-                          //TODO Переход к главному экрану
-                        }*/
+                          try {
+                            print("Первый пошёл");
+                            final userTockens = await widget.apiClient.loginUser(_emailController.text, _passwordController.text);
+                            print("Второй пошёл");
+                            //TODO Помещение токенов в защищённое хранилище
+                            print(userTockens.accessToken);
+                            print(userTockens.refreshToken);
+                            ////////////////////////////////////////////////
+                          } on DioException catch (e) {
+                            if(e.response!= Null && e.response!.statusCode == 401){
+                              final errorJson =
+                              e.response!.data as Map<String, dynamic>;
+                              final error = ErrorResponse.fromJson(errorJson);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error.detail ?? ""),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.message ?? ""),
+                                ),
+                              );
+                            }
+                          }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

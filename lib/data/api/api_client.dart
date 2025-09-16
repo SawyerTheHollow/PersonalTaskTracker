@@ -11,4 +11,11 @@ abstract class ApiClient {
 
   @POST("/register")
   Future<User> registerUser(@Body() User user);
+
+  @POST("/login")
+  @FormUrlEncoded()
+  Future<Tokens> loginUser(
+      @Field("username") String username,
+      @Field("password") String password,
+  );
 }

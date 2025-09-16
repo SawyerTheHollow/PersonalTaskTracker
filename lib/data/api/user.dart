@@ -4,7 +4,7 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  final String name;
+  final String? name;
   final String email;
   final String? password;
 
@@ -14,12 +14,25 @@ class User {
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
+class Tokens {
+  final String accessToken;
+  final String refreshToken;
+
+  Tokens({required this.accessToken, required this.refreshToken});
+  factory Tokens.fromJson(Map<String, dynamic> json) {
+    return Tokens(
+      accessToken: json['access_token'],
+      refreshToken: json['refresh_token'],
+    );
+  }
+}
+
 @JsonSerializable()
 class ErrorResponse {
   final int? code;
   final String? detail;
 
   ErrorResponse({this.code, this.detail});
-
-  factory ErrorResponse.fromJson(Map<String, dynamic> json) => _$ErrorResponseFromJson(json);
+  factory ErrorResponse.fromJson(Map<String, dynamic> json) =>
+      _$ErrorResponseFromJson(json);
 }

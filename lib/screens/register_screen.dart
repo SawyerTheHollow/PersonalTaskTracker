@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:dio/dio.dart';
 import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:first_flutter_project/data/api/user.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 
 class RegisterScreen extends StatefulWidget {
   final ApiClient apiClient;
