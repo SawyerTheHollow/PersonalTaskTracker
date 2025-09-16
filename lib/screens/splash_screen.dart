@@ -1,7 +1,11 @@
+import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  final ApiClient apiClient;
+  SplashScreen({required this.apiClient});
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -55,7 +59,7 @@ class SplashScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 60),
                 ElevatedButton(
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));},
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(apiClient: apiClient,)));},
                   style: ElevatedButton.styleFrom(
                     shadowColor: myThemeColor,
                     elevation: 20,

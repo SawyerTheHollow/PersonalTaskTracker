@@ -1,11 +1,11 @@
+import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final ApiClient apiClient;
+  App({super.key, required this.apiClient});
 
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      home: SplashScreen()
+      home: SplashScreen(apiClient: apiClient,)
     );
   }
 }

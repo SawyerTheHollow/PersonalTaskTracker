@@ -1,20 +1,35 @@
+import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+
+
+  final String? registeredEmail;
+  final String? registeredPassword;
+  final ApiClient apiClient;
+  LoginScreen({Key? key, this.registeredPassword, this.registeredEmail, required this.apiClient});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
+//TextEditingController _emailController = TextEditingController();
+//TextEditingController _passwordController = TextEditingController();
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+      _emailController.text = widget.registeredEmail ?? "";
+      _passwordController.text = widget.registeredPassword ?? "";
+
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
       appBar: AppBar(
@@ -98,6 +113,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             _passwordController.text == "validPassword") {
                           //TODO Переход к главному экрану
                         }
+                        /*else if (_emailController.text == registeredEmail &&
+                            _passwordController.text == "validPassword"){
+                          //TODO Переход к главному экрану
+                        }*/
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -140,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 17,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                            ..onTap = () {Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(apiClient: widget.apiClient)));
                               /*TODO Переход к регистрации*/
                             },
                         ),

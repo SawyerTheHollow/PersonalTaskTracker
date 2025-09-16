@@ -1,11 +1,21 @@
+import 'package:first_flutter_project/data/api/api_client.dart';
+import 'package:first_flutter_project/data/api/user.dart';
+import 'package:first_flutter_project/screens/login_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 class RegisterScreen extends StatefulWidget {
+  final ApiClient apiClient;
+  RegisterScreen({Key? key, required this.apiClient});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
+final RegExp emailRegex = RegExp(
+  r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+);
 const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
 TextEditingController _nameController = TextEditingController();
@@ -86,6 +96,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value == null || value.isEmpty) {
                         return "Введите свой Email";
                       }
+                      if (!emailRegex.hasMatch(value)) {
+                        return "Некорректный формат email";
+                      }
                     },
                   ),
                   SizedBox(height: 30),
@@ -112,9 +125,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                          //TODO Переход к главному экрану и сохранение ввода
+                        User userToRegister = User(
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+                        try {
+                          final registeredUser = await widget.apiClient
+                              .registerUser(userToRegister);
+                          print(registeredUser.toJson());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(
+                                apiClient: widget.apiClient,
+                                registeredEmail: _emailController.text,
+                                registeredPassword: _passwordController.text,
+                              ),
+                            ),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Вы успешно зарегестрировались, используйте ваши данные для входа',
+                              ),
+                            ),
+                          );
+                        } on DioException catch (e) {
+                          if (e.response != null &&
+                              e.response?.statusCode == 400) {
+                            final errorJson =
+                                e.response!.data as Map<String, dynamic>;
+                            final error = ErrorResponse.fromJson(errorJson);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(error.detail ?? "Null")),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.message ?? "Null")),
+                            );
+                          }
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

@@ -1,48 +1,35 @@
+import 'package:first_flutter_project/data/api/user.dart';
 import 'package:flutter/material.dart';
-
 import 'app.dart';
 
-void main() {
-  runApp(const App());
+import 'package:dio/dio.dart';
+import 'data/api/api_client.dart';
+
+
+
+void main() async {
+
+  //Retrofit
+  final dio = Dio();
+  final api = ApiClient(dio);
+
+  //Retrofit
+
+  //Hive
+  //await Hive.initFlutter();
+  //Hive
+  runApp(App(apiClient: api,));
+  /*User user = User(name: "name", email: "email4@mail.ru", password: "password");*/
+ /* try{
+  final registeredUser = await api.registerUser(user);
+  print(registeredUser.toJson());
+  } on DioException catch (e) {
+    if (e.response != null && e.response?.statusCode == 400){
+      final errorJson = e.response!.data as Map<String, dynamic>;
+      final error = ErrorResponse.fromJson(errorJson);
+      print(error.detail);
+    } else {
+      print(e.message);
+    }
+  }*/
 }
-
-
-/*
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  void _incrementCounter() {
-    setState(() {
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(bottom: 80),
-              child:ElevatedButton(onPressed: (){},
-                  child: Text("Продолжить", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),),
-                style: ElevatedButton.styleFrom(minimumSize: Size(300, 80), 
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    backgroundColor: Colors.indigoAccent) ,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
