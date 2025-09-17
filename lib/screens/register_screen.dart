@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:dio/dio.dart';
-import 'package:first_flutter_project/data/api/api_client.dart';
-import 'package:first_flutter_project/data/api/user.dart';
+import 'package:get_it/get_it.dart';
+import 'package:first_flutter_project/api/api_client.dart';
+import 'package:first_flutter_project/api/user.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:first_flutter_project/injection/service_locator.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final ApiClient apiClient;
-  final FlutterSecureStorage secureStorage;
-  RegisterScreen({Key? key, required this.apiClient, required this.secureStorage});
+  RegisterScreen({Key? key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -27,6 +27,7 @@ TextEditingController _passwordController = TextEditingController();
 class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
+    final apiClient = getIt<ApiClient>();
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
       appBar: AppBar(
@@ -135,15 +136,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           password: _passwordController.text,
                         );
                         try {
-                          final registeredUser = await widget.apiClient
-                              .registerUser(userToRegister);
+                          final registeredUser = await apiClient.registerUser(
+                            userToRegister,
+                          );
                           print(registeredUser.toJson());
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoginScreen(
-                                apiClient: widget.apiClient,
-                                secureStorage: widget.secureStorage,
                                 registeredEmail: _emailController.text,
                                 registeredPassword: _passwordController.text,
                               ),

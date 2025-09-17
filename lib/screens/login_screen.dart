@@ -4,21 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'register_screen.dart';
-import 'package:first_flutter_project/data/api/user.dart';
-import 'package:first_flutter_project/data/api/api_client.dart';
+import 'package:first_flutter_project/api/user.dart';
+import 'package:first_flutter_project/api/api_client.dart';
+import 'package:first_flutter_project/injection/service_locator.dart';
 
 class LoginScreen extends StatefulWidget {
   final String? registeredEmail;
   final String? registeredPassword;
-  final ApiClient apiClient;
-  final FlutterSecureStorage secureStorage;
-  LoginScreen({
-    Key? key,
-    this.registeredPassword,
-    this.registeredEmail,
-    required this.apiClient,
-    required this.secureStorage,
-  });
+
+  LoginScreen({Key? key, this.registeredPassword, this.registeredEmail});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -35,7 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     _emailController.text = widget.registeredEmail ?? "";
     _passwordController.text = widget.registeredPassword ?? "";
-
+    final apiClient = getIt<ApiClient>();
+    final secureStorage = getIt<FlutterSecureStorage>();
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
       appBar: AppBar(
@@ -116,15 +111,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          var userTockens = await widget.apiClient.loginUser(
+                          var userTockens = await apiClient.loginUser(
                             _emailController.text,
                             _passwordController.text,
                           );
-                          await widget.secureStorage.write(
+                          await secureStorage.write(
                             key: "accessToken",
                             value: userTockens.accessToken,
                           );
-                          await widget.secureStorage.write(
+                          await secureStorage.write(
                             key: "refreshToken",
                             value: userTockens.refreshToken,
                           );
@@ -135,10 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DashboardScreen(
-                                apiClient: widget.apiClient,
-                                secureStorage: widget.secureStorage,
-                              ),
+                              builder: (context) => DashboardScreen(),
                             ),
                           );
                         } on DioException catch (e) {
@@ -202,10 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RegisterScreen(
-                                    apiClient: widget.apiClient,
-                                    secureStorage: widget.secureStorage,
-                                  ),
+                                  builder: (context) => RegisterScreen(),
                                 ),
                               );
                             },

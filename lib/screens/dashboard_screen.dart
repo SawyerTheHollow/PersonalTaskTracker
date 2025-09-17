@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:first_flutter_project/data/api/api_client.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final ApiClient apiClient;
-  final FlutterSecureStorage secureStorage;
-  DashboardScreen({
-    Key? key,
-    required this.apiClient,
-    required this.secureStorage,
-  });
+  DashboardScreen({Key? key});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
