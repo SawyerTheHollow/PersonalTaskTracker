@@ -18,4 +18,11 @@ abstract class ApiClient {
       @Field("username") String username,
       @Field("password") String password,
   );
+
+  @POST("/refresh_token")
+  Future<TokenResponse> refreshToken(
+      @Query("refresh_token") String refreshToken);
+
+  /*@GET("/users/me")
+  Future<User> getUserMe();*/
 }

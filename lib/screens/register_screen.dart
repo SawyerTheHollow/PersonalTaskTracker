@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:first_flutter_project/data/api/user.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class RegisterScreen extends StatefulWidget {
   final ApiClient apiClient;
-  RegisterScreen({Key? key, required this.apiClient});
+  final FlutterSecureStorage secureStorage;
+  RegisterScreen({Key? key, required this.apiClient, required this.secureStorage});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -141,6 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             MaterialPageRoute(
                               builder: (context) => LoginScreen(
                                 apiClient: widget.apiClient,
+                                secureStorage: widget.secureStorage,
                                 registeredEmail: _emailController.text,
                                 registeredPassword: _passwordController.text,
                               ),

@@ -1,17 +1,24 @@
+import 'package:first_flutter_project/screens/dashboard_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'register_screen.dart';
 import 'package:first_flutter_project/data/api/user.dart';
 import 'package:first_flutter_project/data/api/api_client.dart';
 
 class LoginScreen extends StatefulWidget {
-
-
   final String? registeredEmail;
   final String? registeredPassword;
   final ApiClient apiClient;
-  LoginScreen({Key? key, this.registeredPassword, this.registeredEmail, required this.apiClient});
+  final FlutterSecureStorage secureStorage;
+  LoginScreen({
+    Key? key,
+    this.registeredPassword,
+    this.registeredEmail,
+    required this.apiClient,
+    required this.secureStorage,
+  });
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -21,14 +28,13 @@ const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
 
 class _LoginScreenState extends State<LoginScreen> {
-
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-      _emailController.text = widget.registeredEmail ?? "";
-      _passwordController.text = widget.registeredPassword ?? "";
+    _emailController.text = widget.registeredEmail ?? "";
+    _passwordController.text = widget.registeredPassword ?? "";
 
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
@@ -109,32 +115,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                          try {
-                            print("Первый пошёл");
-                            final userTockens = await widget.apiClient.loginUser(_emailController.text, _passwordController.text);
-                            print("Второй пошёл");
-                            //TODO Помещение токенов в защищённое хранилище
-                            print(userTockens.accessToken);
-                            print(userTockens.refreshToken);
-                            ////////////////////////////////////////////////
-                          } on DioException catch (e) {
-                            if(e.response!= Null && e.response!.statusCode == 401){
-                              final errorJson =
-                              e.response!.data as Map<String, dynamic>;
-                              final error = ErrorResponse.fromJson(errorJson);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(error.detail ?? ""),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(e.message ?? ""),
-                                ),
-                              );
-                            }
+                        try {
+                          var userTockens = await widget.apiClient.loginUser(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          await widget.secureStorage.write(
+                            key: "accessToken",
+                            value: userTockens.accessToken,
+                          );
+                          await widget.secureStorage.write(
+                            key: "refreshToken",
+                            value: userTockens.refreshToken,
+                          );
+                          userTockens = Tokens(
+                            accessToken: "",
+                            refreshToken: "",
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(
+                                apiClient: widget.apiClient,
+                                secureStorage: widget.secureStorage,
+                              ),
+                            ),
+                          );
+                        } on DioException catch (e) {
+                          if (e.response != Null &&
+                              e.response!.statusCode == 401) {
+                            final errorJson =
+                                e.response!.data as Map<String, dynamic>;
+                            final error = ErrorResponse.fromJson(errorJson);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(error.detail ?? "")),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.message ?? "")),
+                            );
                           }
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -177,8 +198,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 17,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(apiClient: widget.apiClient)));
-                              /*TODO Переход к регистрации*/
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(
+                                    apiClient: widget.apiClient,
+                                    secureStorage: widget.secureStorage,
+                                  ),
+                                ),
+                              );
                             },
                         ),
                       ],

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:first_flutter_project/data/api/api_client.dart';
 import 'package:first_flutter_project/screens/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   final ApiClient apiClient;
-  SplashScreen({required this.apiClient});
+  final FlutterSecureStorage secureStorage;
+  SplashScreen({required this.apiClient, required this.secureStorage});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,17 @@ class SplashScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 60),
                 ElevatedButton(
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(apiClient: apiClient,)));},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(
+                          apiClient: apiClient,
+                          secureStorage: secureStorage,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shadowColor: myThemeColor,
                     elevation: 20,
