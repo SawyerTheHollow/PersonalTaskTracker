@@ -1,4 +1,5 @@
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
+import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
 
@@ -36,24 +37,16 @@ class SplashScreen extends StatelessWidget {
                     color: myThemeColor,
                   ),
                 ),
-                Text(
-                  "Персональный таск-трекер",
-                  style: TextStyle(
-                    fontSize: 45,
-                    height: 1.1,
-                    color: Color(0xFF2F394A),
-                    fontWeight: FontWeight.bold,
-                  ),
+                TaskaTitleText(
+                  topText: "Персональный таск-трекер",
+                  bottomText: "Порядок в делах - порядок в уме",
+                  topFontSize: 45,
+                  bottomFontSize: 17,
+                  topFontWeight: FontWeight.bold,
+                  bottomFontWeight: FontWeight.bold,
                   textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Порядок в делах - порядок в уме",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFB8B8BA),
-                  ),
+                  height: 1.1,
+                  spaceBetween: 10,
                 ),
                 SizedBox(height: 60),
                 TaskaElevatedButton(

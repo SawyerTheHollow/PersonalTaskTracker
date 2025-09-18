@@ -1,4 +1,5 @@
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
+import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,30 +28,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Padding(
             padding: EdgeInsetsGeometry.all(20),
-            child: TaskaTextFormField(labelText: "Что надо сделать?")
+            child: TaskaTextFormField(labelText: "Что надо сделать?"),
           ),
           Padding(
             padding: EdgeInsetsGeometry.all(20),
             child: Row(
               children: [
-                Column(
-                  children: [
-                    Text(
-                      "20 октября",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Color(0xFF2F394A),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "3 задачи на сегодня",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 15, color: Color(0xFFB8B8BA)),
-                    ),
-                  ],
+                TaskaTitleText(
+                  topText: "20 октября",
+                  bottomText: "3 задачи на сегодня",
                 ),
+
                 Spacer(),
                 Icon(Icons.calendar_month),
               ],
@@ -69,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 60,
                     margin: EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
-                    //  border: Border.all(color: Color(0xFFE7EFFD)),
+                      //  border: Border.all(color: Color(0xFFE7EFFD)),
                       borderRadius: BorderRadius.circular(18),
                       color: Color(0xFFF8F7FD),
                     ),

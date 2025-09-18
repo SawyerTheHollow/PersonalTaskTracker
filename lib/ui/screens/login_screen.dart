@@ -1,6 +1,7 @@
 import 'package:first_flutter_project/ui/screens/dashboard_screen.dart';
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
+import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -47,17 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Добро пожаловать",
-              style: TextStyle(
-                fontSize: 28,
-                color: Color(0xFF2F394A),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Введите E-mail и пароль для входа",
-              style: TextStyle(fontSize: 15, color: Color(0xFFB8B8BA)),
+            TaskaTitleText(
+              topText: "Добро пожаловать",
+              bottomText: "Введите E-mail и пароль для входа",
             ),
             SizedBox(height: 60),
             Form(

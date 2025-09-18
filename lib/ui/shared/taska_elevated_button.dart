@@ -27,7 +27,14 @@ class TaskaElevatedButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         backgroundColor: Color(0xFF665EE2),
       ),
-      child: Text(text, style: TextStyle(fontSize: fontSize, color: Colors.white, fontWeight: fontWeight),),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: Colors.white,
+          fontWeight: fontWeight,
+        ),
+      ),
     );
   }
 }

@@ -6,7 +6,13 @@ class TaskaTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool obscureText;
-  TaskaTextFormField({Key? key, required this.labelText, this.controller, this.validator, this.obscureText = false}) : super(key: key);
+  TaskaTextFormField({
+    Key? key,
+    required this.labelText,
+    this.controller,
+    this.validator,
+    this.obscureText = false,
+  }) : super(key: key);
   @override
   _TaskaTextFormFieldState createState() => _TaskaTextFormFieldState();
 }

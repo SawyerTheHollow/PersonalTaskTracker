@@ -1,13 +1,12 @@
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
+import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:first_flutter_project/api/api_client.dart';
 import 'package:first_flutter_project/api/user.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:first_flutter_project/injection/service_locator.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -43,17 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Создать аккаунт",
-              style: TextStyle(
-                fontSize: 28,
-                color: Color(0xFF2F394A),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Заполните поля для регистрации",
-              style: TextStyle(fontSize: 15, color: Color(0xFFB8B8BA)),
+            TaskaTitleText(
+              topText: "Создать аккаунт",
+              bottomText: "Заполните поля для регистрации",
             ),
             SizedBox(height: 60),
             Form(
