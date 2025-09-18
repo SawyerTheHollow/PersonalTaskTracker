@@ -13,6 +13,8 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: myThemeColor,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(flex: 1, child: Container(color: Colors.transparent)),
@@ -47,6 +49,7 @@ class SplashScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   height: 1.1,
                   spaceBetween: 10,
+                  columnAlignment: CrossAxisAlignment.center,
                 ),
                 SizedBox(height: 60),
                 TaskaElevatedButton(

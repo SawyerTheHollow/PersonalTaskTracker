@@ -10,6 +10,7 @@ class TaskaTitleText extends StatelessWidget {
   final FontWeight bottomFontWeight;
   final double height;
   final double spaceBetween;
+  final CrossAxisAlignment columnAlignment;
   TaskaTitleText({
     Key? key,
     required this.topText,
@@ -21,12 +22,13 @@ class TaskaTitleText extends StatelessWidget {
     this.textAlign = TextAlign.left,
     this.height = 1.4,
     this.spaceBetween = 0,
+    this.columnAlignment = CrossAxisAlignment.start,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: columnAlignment,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(

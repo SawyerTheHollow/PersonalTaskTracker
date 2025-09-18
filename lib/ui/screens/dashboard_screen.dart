@@ -24,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Color(0xFFF8F7FD),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        //mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsetsGeometry.all(20),
