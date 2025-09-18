@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:dio/dio.dart';
@@ -127,7 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: true,
                   ),
                   SizedBox(height: 30),
-                  ElevatedButton(
+                 TaskaElevatedButton(
+                    text: "Регистрация",
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         User userToRegister = User(
@@ -179,21 +181,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: myThemeColor,
-                      elevation: 20,
-                      minimumSize: Size(0, 60),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      backgroundColor: myThemeColor,
-                    ),
-                    child: Text(
-                      "Регистрация",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(

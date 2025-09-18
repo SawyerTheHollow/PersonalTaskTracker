@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
 
@@ -55,30 +56,14 @@ class SplashScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 60),
-                ElevatedButton(
+                TaskaElevatedButton(text: "Продолжить", fontSize: 24, fontWeight: FontWeight.bold, minimumSize: Size(320, 65),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: myThemeColor,
-                    elevation: 20,
-                    minimumSize: Size(320, 70),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    backgroundColor: myThemeColor,
-                  ),
-                  child: Text(
-                    "Продолжить",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+
                 ),
               ],
             ),

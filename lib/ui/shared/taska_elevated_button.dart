@@ -1,0 +1,33 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class TaskaElevatedButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final Size minimumSize;
+  const TaskaElevatedButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.normal,
+    this.minimumSize = const Size(0, 55),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shadowColor: Color(0xFF665EE2),
+        elevation: 20,
+        minimumSize: minimumSize,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        backgroundColor: Color(0xFF665EE2),
+      ),
+      child: Text(text, style: TextStyle(fontSize: fontSize, color: Colors.white, fontWeight: fontWeight),),
+    );
+  }
+}
