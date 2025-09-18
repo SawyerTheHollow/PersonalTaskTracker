@@ -1,5 +1,6 @@
 import 'package:first_flutter_project/ui/screens/dashboard_screen.dart';
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
+import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -65,19 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите Email",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
+                  TaskaTextFormField(
+                    labelText: "Введите Email",
                     controller: _emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -86,26 +76,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   SizedBox(height: 30),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите пароль",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
+                  TaskaTextFormField(
+                    obscureText: true,
+                    labelText: "Введите пароль",
                     controller: _passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Введите свой пароль";
                       }
                     },
-                    obscureText: true,
                   ),
                   SizedBox(height: 30),
                   TaskaElevatedButton(

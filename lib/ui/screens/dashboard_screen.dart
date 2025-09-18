@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,20 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Padding(
             padding: EdgeInsetsGeometry.all(20),
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: "Что надо сделать?",
-                labelStyle: TextStyle(color: Color(0xFF838993)),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide(color: myThemeColor),
-                ),
-              ),
-            ),
+            child: TaskaTextFormField(labelText: "Что надо сделать?")
           ),
           Padding(
             padding: EdgeInsetsGeometry.all(20),

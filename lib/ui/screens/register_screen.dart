@@ -1,4 +1,5 @@
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
+import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:dio/dio.dart';
@@ -61,19 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите ваше имя",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
+                  TaskaTextFormField(
+                    labelText: "Введите ваше имя",
                     controller: _nameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -82,19 +72,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   SizedBox(height: 30),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите Email",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
+                  TaskaTextFormField(
+                    labelText: "Введите Email",
                     controller: _emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -106,29 +85,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   SizedBox(height: 30),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите пароль",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
+                  TaskaTextFormField(
+                    labelText: "Введите пароль",
                     controller: _passwordController,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Введите свой пароль";
                       }
                     },
-                    obscureText: true,
                   ),
                   SizedBox(height: 30),
-                 TaskaElevatedButton(
+                  TaskaElevatedButton(
                     text: "Регистрация",
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {

@@ -56,14 +56,17 @@ class SplashScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 60),
-                TaskaElevatedButton(text: "Продолжить", fontSize: 24, fontWeight: FontWeight.bold, minimumSize: Size(320, 65),
+                TaskaElevatedButton(
+                  text: "Продолжить",
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  minimumSize: Size(320, 65),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-
                 ),
               ],
             ),
