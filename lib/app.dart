@@ -2,7 +2,7 @@ import 'package:first_flutter_project/api/api_client.dart';
 import 'package:flutter/material.dart';
 
 import 'injection/service_locator.dart';
-import 'screens/splash_screen.dart';
+import 'ui/screens/splash_screen.dart';
 
 class App extends StatelessWidget {
   App({super.key});

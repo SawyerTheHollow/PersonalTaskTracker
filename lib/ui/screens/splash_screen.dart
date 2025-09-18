@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_flutter_project/screens/login_screen.dart';
+import 'package:first_flutter_project/ui/screens/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   @override

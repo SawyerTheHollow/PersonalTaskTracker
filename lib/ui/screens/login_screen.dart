@@ -1,38 +1,42 @@
-import 'package:flutter/material.dart';
+import 'package:first_flutter_project/ui/screens/dashboard_screen.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
-import 'package:first_flutter_project/api/api_client.dart';
-import 'package:first_flutter_project/api/user.dart';
-import 'package:first_flutter_project/screens/login_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'register_screen.dart';
+import 'package:first_flutter_project/api/user.dart';
+import 'package:first_flutter_project/api/api_client.dart';
 import 'package:first_flutter_project/injection/service_locator.dart';
 
-class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key});
+class LoginScreen extends StatefulWidget {
+  final String? registeredEmail;
+  final String? registeredPassword;
+
+  LoginScreen({Key? key, this.registeredPassword, this.registeredEmail});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-final RegExp emailRegex = RegExp(
-  r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-);
 const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
-TextEditingController _nameController = TextEditingController();
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    _emailController.text = widget.registeredEmail ?? "";
+    _passwordController.text = widget.registeredPassword ?? "";
     final apiClient = getIt<ApiClient>();
+    final secureStorage = getIt<FlutterSecureStorage>();
     return Scaffold(
       backgroundColor: Color(0xFFF8F7FD),
       appBar: AppBar(
         toolbarHeight: 80,
-        title: Text("Регистрация"),
+        automaticallyImplyLeading: false,
+        title: Text("Вход"),
         centerTitle: true,
       ),
       body: Padding(
@@ -42,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Создать аккаунт",
+              "Добро пожаловать",
               style: TextStyle(
                 fontSize: 28,
                 color: Color(0xFF2F394A),
@@ -50,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             Text(
-              "Заполните поля для регистрации",
+              "Введите E-mail и пароль для входа",
               style: TextStyle(fontSize: 15, color: Color(0xFFB8B8BA)),
             ),
             SizedBox(height: 60),
@@ -60,27 +64,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Введите ваше имя",
-                      labelStyle: TextStyle(color: Color(0xFF838993)),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: Color(0xFFE7EFFD)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: BorderSide(color: myThemeColor),
-                      ),
-                    ),
-                    controller: _nameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Введите ваше имя";
-                      }
-                    },
-                  ),
-                  SizedBox(height: 30),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: "Введите Email",
@@ -98,9 +81,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Введите свой Email";
-                      }
-                      if (!emailRegex.hasMatch(value)) {
-                        return "Некорректный формат email";
                       }
                     },
                   ),
@@ -130,44 +110,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        User userToRegister = User(
-                          name: _nameController.text,
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        );
                         try {
-                          final registeredUser = await apiClient.registerUser(
-                            userToRegister,
+                          var userTockens = await apiClient.loginUser(
+                            _emailController.text,
+                            _passwordController.text,
                           );
-                          print(registeredUser.toJson());
+                          await secureStorage.write(
+                            key: "accessToken",
+                            value: userTockens.accessToken,
+                          );
+                          await secureStorage.write(
+                            key: "refreshToken",
+                            value: userTockens.refreshToken,
+                          );
+                          userTockens = Tokens(
+                            accessToken: "",
+                            refreshToken: "",
+                          );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LoginScreen(
-                                registeredEmail: _emailController.text,
-                                registeredPassword: _passwordController.text,
-                              ),
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Вы успешно зарегестрировались, используйте ваши данные для входа',
-                              ),
+                              builder: (context) => DashboardScreen(),
                             ),
                           );
                         } on DioException catch (e) {
-                          if (e.response != null &&
-                              e.response?.statusCode == 400) {
+                          if (e.response != Null &&
+                              e.response!.statusCode == 401) {
                             final errorJson =
                                 e.response!.data as Map<String, dynamic>;
                             final error = ErrorResponse.fromJson(errorJson);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(error.detail ?? "Null")),
+                              SnackBar(content: Text(error.detail ?? "")),
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.message ?? "Null")),
+                              SnackBar(content: Text(e.message ?? "")),
                             );
                           }
                         }
@@ -189,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       backgroundColor: myThemeColor,
                     ),
                     child: Text(
-                      "Регистрация",
+                      "Вход",
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -199,14 +176,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Есть аккаунт? ",
+                          text: "Нет аккаунта? ",
                           style: TextStyle(
                             color: Color(0xFFB8B8BA),
                             fontSize: 17,
                           ),
                         ),
                         TextSpan(
-                          text: "Войти",
+                          text: "Зарегистрироваться",
                           style: TextStyle(
                             color: myThemeColor,
                             fontWeight: FontWeight.bold,
@@ -214,7 +191,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(),
+                                ),
+                              );
                             },
                         ),
                       ],
