@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/cupertino.dart';
 
 class TaskaTitleText extends StatelessWidget {
@@ -36,7 +37,7 @@ class TaskaTitleText extends StatelessWidget {
           textAlign: textAlign,
           style: TextStyle(
             fontSize: topFontSize,
-            color: Color(0xFF2F394A),
+            color: taskaTextDark,
             fontWeight: topFontWeight,
             height: height,
           ),
@@ -47,7 +48,7 @@ class TaskaTitleText extends StatelessWidget {
           textAlign: textAlign,
           style: TextStyle(
             fontSize: bottomFontSize,
-            color: Color(0xFFB8B8BA),
+            color: taskaTextGray,
             fontWeight: bottomFontWeight,
           ),
         ),

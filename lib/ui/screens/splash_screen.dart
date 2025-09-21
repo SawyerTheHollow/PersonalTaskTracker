@@ -3,15 +3,16 @@ import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
 
+import '../shared/palette.dart';
+
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final myThemeColor = Color(0xFF665EE2);
 
     return Scaffold(
-      backgroundColor: myThemeColor,
+      backgroundColor: taskaPurplish,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
 
@@ -20,7 +21,7 @@ class SplashScreen extends StatelessWidget {
           Expanded(flex: 1, child: Container(color: Colors.transparent)),
           Container(
             decoration: BoxDecoration(
-              color: Color(0xFFF8F7FD),
+              color: taskaBackground,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(50),
                 topRight: Radius.circular(50),
@@ -36,7 +37,7 @@ class SplashScreen extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'Poller',
                     fontSize: 50,
-                    color: myThemeColor,
+                    color: taskaPurplish,
                   ),
                 ),
                 TaskaTitleText(

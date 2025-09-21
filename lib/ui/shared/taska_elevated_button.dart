@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,17 +22,17 @@ class TaskaElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shadowColor: Color(0xFF665EE2),
+        shadowColor: taskaPurplish,
         elevation: 20,
         minimumSize: minimumSize,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        backgroundColor: Color(0xFF665EE2),
+        backgroundColor: taskaPurplish,
       ),
       child: Text(
         text,
         style: TextStyle(
           fontSize: fontSize,
-          color: Colors.white,
+          color: taskaBackground,
           fontWeight: fontWeight,
         ),
       ),

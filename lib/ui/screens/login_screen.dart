@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../shared/palette.dart';
 import 'register_screen.dart';
 import 'package:first_flutter_project/api/user.dart';
 import 'package:first_flutter_project/api/api_client.dart';
@@ -21,7 +22,6 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-const myThemeColor = Color(0xFF665EE2);
 final _formKey = GlobalKey<FormState>();
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -35,8 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final apiClient = getIt<ApiClient>();
     final secureStorage = getIt<FlutterSecureStorage>();
     return Scaffold(
-      backgroundColor: Color(0xFFF8F7FD),
+      backgroundColor: taskaBackground,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
         title: Text("Вход"),
@@ -139,14 +140,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(
                           text: "Нет аккаунта? ",
                           style: TextStyle(
-                            color: Color(0xFFB8B8BA),
+                            color: taskaTextGray,
                             fontSize: 17,
                           ),
                         ),
                         TextSpan(
                           text: "Зарегистрироваться",
                           style: TextStyle(
-                            color: myThemeColor,
+                            color: taskaPurplish,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
@@ -165,6 +166,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+            ),
+            TaskaElevatedButton(
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DashboardScreen()),
+                );
+              },
+              text: "Пропустить (Debug)",
             ),
           ],
         ),

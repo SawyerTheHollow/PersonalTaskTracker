@@ -1,3 +1,4 @@
+import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,14 +27,14 @@ class _TaskaTextFormFieldState extends State<TaskaTextFormField> {
       validator: widget.validator,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: TextStyle(color: Color(0xFF838993)),
+        labelStyle: TextStyle(color: taskaTextGray),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: Color(0xFFE7EFFD)),
+          borderSide: BorderSide(color: taskaBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: Color(0xFF665EE2)),
+          borderSide: BorderSide(color: taskaPurplish),
         ),
       ),
     );

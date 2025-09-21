@@ -9,6 +9,8 @@ import 'package:first_flutter_project/api/user.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
 import 'package:first_flutter_project/injection/service_locator.dart';
 
+import '../shared/palette.dart';
+
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key? key});
 
@@ -19,7 +21,7 @@ class RegisterScreen extends StatefulWidget {
 final RegExp emailRegex = RegExp(
   r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
 );
-const myThemeColor = Color(0xFF665EE2);
+
 final _formKey = GlobalKey<FormState>();
 TextEditingController _nameController = TextEditingController();
 TextEditingController _emailController = TextEditingController();
@@ -30,8 +32,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final apiClient = getIt<ApiClient>();
     return Scaffold(
-      backgroundColor: Color(0xFFF8F7FD),
+      backgroundColor: taskaBackground,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         toolbarHeight: 80,
         title: Text("Регистрация"),
         centerTitle: true,
@@ -149,14 +152,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextSpan(
                           text: "Есть аккаунт? ",
                           style: TextStyle(
-                            color: Color(0xFFB8B8BA),
+                            color: taskaTextGray,
                             fontSize: 17,
                           ),
                         ),
                         TextSpan(
                           text: "Войти",
                           style: TextStyle(
-                            color: myThemeColor,
+                            color: taskaPurplish,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
