@@ -1,6 +1,8 @@
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
-class Task {
+class Task extends HiveObject {
+
   final String name;
   final String? note;
   final String? tag;
@@ -8,7 +10,7 @@ class Task {
   final bool? deadline;
   final DateFormat? deadlineDate;
   final String priority;
-  final bool complited;
+  final bool completed;
 
   Task({
     required this.name,
@@ -18,6 +20,6 @@ class Task {
     this.tag,
     this.deadline,
     this.deadlineDate,
-    this.complited = false
+    this.completed = false
   });
 }

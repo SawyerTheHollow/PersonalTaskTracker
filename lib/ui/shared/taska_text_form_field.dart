@@ -7,12 +7,14 @@ class TaskaTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool obscureText;
+  final double height;
   TaskaTextFormField({
     Key? key,
     required this.labelText,
     this.controller,
     this.validator,
     this.obscureText = false,
+    this.height = 20
   }) : super(key: key);
   @override
   _TaskaTextFormFieldState createState() => _TaskaTextFormFieldState();
@@ -26,6 +28,7 @@ class _TaskaTextFormFieldState extends State<TaskaTextFormField> {
       controller: widget.controller,
       validator: widget.validator,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(widget.height),
         labelText: widget.labelText,
         labelStyle: TextStyle(color: taskaTextGray),
         enabledBorder: OutlineInputBorder(

@@ -1,10 +1,13 @@
 import 'package:first_flutter_project/models/task.dart';
+import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:first_flutter_project/injection/service_locator.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key});
@@ -56,11 +59,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ],
   };
 
+  /*List<Task> _getTasksForDay(DateTime day) {
+    return _tasks[DateTime(day.year, day.month, day.day)] ?? [];
+  }*/
+
   List<Task> _getTasksForDay(DateTime day) {
     return _tasks[DateTime(day.year, day.month, day.day)] ?? [];
   }
-
-
 
   Widget _buildTaskList() {
     final tasks = _getTasksForDay(_selectedDay);
@@ -103,13 +108,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.black,
                   ),
                 ), //Чек-марки
-                title: Text(task.name, style: TextStyle(color: taskaTextDark, fontSize: 17),),
-                subtitle: RichText(text: TextSpan(children: [WidgetSpan(alignment: PlaceholderAlignment.middle, child: Icon(Icons.local_offer_outlined, size: 15, color: taskaPurplish,)),TextSpan(text: " "), TextSpan(text: task.tag, style: TextStyle(fontSize: 15, color: taskaTextGray))])),
+                title: Text(
+                  task.name,
+                  style: TextStyle(color: taskaTextDark, fontSize: 17),
+                ),
+                subtitle: RichText(
+                  text: TextSpan(
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.local_offer_outlined,
+                          size: 15,
+                          color: taskaPurplish,
+                        ),
+                      ),
+                      TextSpan(text: " "),
+                      TextSpan(
+                        text: task.tag,
+                        style: TextStyle(fontSize: 15, color: taskaTextGray),
+                      ),
+                    ],
+                  ),
+                ),
                 onTap: () {
                   //TODO Выделение чек-марка
                   print('Событие: ${task.name}');
                 },
-                trailing: Icon(Icons.info_outline, color: Color(0xffafd77e),),
+                trailing: Icon(Icons.info_outline, color: Color(0xffafd77e)),
               ),
             ),
           );
@@ -210,16 +236,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
-        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark),),
+        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        actions: [IconButton(onPressed: (){}, icon: Icon(Icons.add_box_outlined, size: 35,color: taskaTextDark,), padding: EdgeInsets.only(right: 20),),],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddTaskScreen()),
+              );
+            },
+            icon: Icon(Icons.add_box_outlined, size: 35, color: taskaTextDark),
+            padding: EdgeInsets.only(right: 20),
+          ),
+        ],
       ),
       body: Column(
         children: [
           Padding(
             padding: EdgeInsets.all(20),
-            child: TaskaTextFormField(labelText: "Что надо сделать?"),
+            child: TaskaTextFormField(labelText: "Что надо сделать?", height: 15,),
           ),
           Padding(
             padding: EdgeInsets.all(20),
@@ -233,7 +270,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Spacer(),
                 IconButton(
                   onPressed: () => _showOverlay(context),
-                  icon: Icon(Icons.calendar_month, color: taskaTextDark,),
+                  icon: Icon(Icons.calendar_month, color: taskaTextDark),
                   iconSize: 30,
                   style: IconButton.styleFrom(
                     side: BorderSide(color: taskaBorder),

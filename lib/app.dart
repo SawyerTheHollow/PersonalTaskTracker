@@ -1,4 +1,5 @@
 import 'package:first_flutter_project/api/api_client.dart';
+import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
 
 import 'injection/service_locator.dart';
@@ -14,7 +15,8 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Taska',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        colorScheme: ColorScheme.fromSeed(seedColor: taskaPurplish),
+
       ),
       home: SplashScreen(),
     );
