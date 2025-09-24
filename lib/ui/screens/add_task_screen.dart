@@ -3,10 +3,11 @@ import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_toggle_buttons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../../injection/service_locator.dart';
 
 class AddTaskScreen extends StatefulWidget {
   AddTaskScreen({Key? key});
@@ -26,6 +27,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String _selectedPriority = "Низкий";
   bool _showDeadlineForms = false;
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   //Функция для обновления значения _selectedPriority
   void _updateSelectedPriority(String newPriority) {
     setState(() {
@@ -33,13 +36,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     });
   }
 
+  //Функция для валидации текстового поля
+  String? _validator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Это поле обязательно для заполнения";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var taskBox = getIt<Box>();
     final String currentDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final String currentTime = DateFormat('hh.mm').format(DateTime.now());
+    _tagController.text = "Без тега";
+    _dateController.text = currentDate;
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         toolbarHeight: 80,
         title: Text("Добавить задачу"),
         backgroundColor: taskaBackground,
@@ -48,244 +63,102 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Наименование задачи",
-                style: TextStyle(color: taskaTextGray, fontSize: 15),
-              ),
-              SizedBox(height: 15),
-              TaskaTextFormField(
-                labelText: "Текст наименования задачи",
-                controller: _nameController,
-              ),
-              SizedBox(height: 15),
-              Text(
-                "Примечание",
-                style: TextStyle(color: taskaTextGray, fontSize: 15),
-              ),
-              SizedBox(height: 15),
-              TaskaTextFormField(
-                labelText: "Текст примечания",
-                controller: _noteController,
-              ),
-              SizedBox(height: 15),
-              Text(
-                "Выбрать тег",
-                style: TextStyle(color: taskaTextGray, fontSize: 15),
-              ),
-              SizedBox(height: 15),
-              DropdownButtonFormField(
-                hint: Text(
-                  "Без тега",
-                  style: TextStyle(color: taskaTextGray, fontSize: 16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Наименование задачи",
+                  style: TextStyle(color: taskaTextGray, fontSize: 15),
                 ),
-                items: [
-                  DropdownMenuItem(
-                    child: Text(
-                      "Без тега",
-                      style: TextStyle(color: taskaTextDark),
-                    ),
-                    value: "Без тега",
-                  ),
-                  DropdownMenuItem(
-                    child: Text(
-                      "Покупки",
-                      style: TextStyle(color: taskaTextDark),
-                    ),
-                    value: "Покупки",
-                  ),
-                  DropdownMenuItem(
-                    child: Text(
-                      "Работа",
-                      style: TextStyle(color: taskaTextDark),
-                    ),
-                    value: "Работа",
-                  ),
-                  DropdownMenuItem(
-                    child: Text(
-                      "Семья",
-                      style: TextStyle(color: taskaTextDark),
-                    ),
-                    value: "Семья",
-                  ),
-                  DropdownMenuItem(
-                    child: Text(
-                      "Учёба",
-                      style: TextStyle(color: taskaTextDark),
-                    ),
-                    value: "Учёба",
-                  ),
-                ],
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: taskaPurplish,
-                  size: 40,
+                SizedBox(height: 15),
+                TaskaTextFormField(
+                  labelText: "Текст наименования задачи",
+                  controller: _nameController,
+                  validator: _validator,
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _tagController.text = value ?? "";
-                  });
-                  print(_tagController.text);
-                },
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(20),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: taskaPurplish),
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide(color: taskaBorder),
-                  ),
+                SizedBox(height: 15),
+                Text(
+                  "Примечание",
+                  style: TextStyle(color: taskaTextGray, fontSize: 15),
                 ),
-              ),
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Дата",
-                            style: TextStyle(
-                              color: taskaTextGray,
-                              fontSize: 15,
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: taskaTextDark,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(20),
-                              hint: Text(
-                                currentDate,
-                                style: TextStyle(
-                                  color: taskaTextGray,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: taskaBorder),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: taskaPurplish),
-                              ),
-                            ),
-                            controller: _dateController,
-                            onTap: () async {
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                              );
-                              _dateController.text = DateFormat(
-                                'dd.MM.yyyy',
-                              ).format(picked!);
-                            },
-                          ),
-                        ],
+                SizedBox(height: 15),
+                TaskaTextFormField(
+                  labelText: "Текст примечания",
+                  controller: _noteController,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Выбрать тег",
+                  style: TextStyle(color: taskaTextGray, fontSize: 15),
+                ),
+                SizedBox(height: 15),
+                DropdownButtonFormField(
+                  hint: Text(
+                    "Без тега",
+                    style: TextStyle(color: taskaTextGray, fontSize: 16),
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text(
+                        "Без тега",
+                        style: TextStyle(color: taskaTextDark),
                       ),
+                      value: "Без тега",
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Время",
-                            style: TextStyle(
-                              color: taskaTextGray,
-                              fontSize: 15,
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: taskaTextDark,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(20),
-                              hint: Text(
-                                currentTime,
-                                style: TextStyle(
-                                  color: taskaTextGray,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: taskaBorder),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: taskaPurplish),
-                              ),
-                            ),
-                            controller: _timeController,
-                            onTap: () async {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              final hour = picked?.hour.toString().padLeft(
-                                2,
-                                '0',
-                              );
-                              final minute = picked?.minute.toString().padLeft(
-                                2,
-                                '0',
-                              );
-                              _timeController.text = '$hour:$minute';
-                            },
-                          ),
-                        ],
+                    DropdownMenuItem(
+                      child: Text(
+                        "Покупки",
+                        style: TextStyle(color: taskaTextDark),
                       ),
+                      value: "Покупки",
+                    ),
+                    DropdownMenuItem(
+                      child: Text(
+                        "Работа",
+                        style: TextStyle(color: taskaTextDark),
+                      ),
+                      value: "Работа",
+                    ),
+                    DropdownMenuItem(
+                      child: Text(
+                        "Семья",
+                        style: TextStyle(color: taskaTextDark),
+                      ),
+                      value: "Семья",
+                    ),
+                    DropdownMenuItem(
+                      child: Text(
+                        "Учёба",
+                        style: TextStyle(color: taskaTextDark),
+                      ),
+                      value: "Учёба",
+                    ),
+                  ],
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: taskaPurplish,
+                    size: 40,
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _tagController.text = value ?? "";
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(20),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: taskaPurplish),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(color: taskaBorder),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: CustomCheckBox(
-                      checkedIcon: Icons.check,
-                      borderRadius: 12,
-                      checkBoxSize: 40,
-                      checkedIconColor: taskaTextDark,
-                      borderColor: taskaTextDark,
-                      shouldShowBorder: true,
-                      checkedFillColor: taskaGreen,
-                      value: _showDeadlineForms,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _showDeadlineForms = value ?? false;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    "Есть срок?",
-                    style: TextStyle(color: taskaTextGray, fontSize: 15),
-                  ),
-                ],
-              ),
-              if (_showDeadlineForms) ...[
+                ),
+                SizedBox(height: 15),
                 Row(
                   children: [
                     Expanded(
@@ -295,12 +168,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Выполнить до",
+                              "Дата",
                               style: TextStyle(
                                 color: taskaTextGray,
                                 fontSize: 15,
                               ),
                             ),
+                            SizedBox(height: 15),
                             TextFormField(
                               style: TextStyle(
                                 fontSize: 20,
@@ -309,7 +183,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(20),
                                 hint: Text(
-                                  currentTime,
+                                  currentDate,
                                   style: TextStyle(
                                     color: taskaTextGray,
                                     fontSize: 16,
@@ -324,7 +198,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   borderSide: BorderSide(color: taskaPurplish),
                                 ),
                               ),
-                              controller: _doBeforeDateController,
+                              controller: _dateController,
                               onTap: () async {
                                 final DateTime? picked = await showDatePicker(
                                   context: context,
@@ -332,7 +206,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
                                 );
-                                _doBeforeDateController.text = DateFormat(
+                                _dateController.text = DateFormat(
                                   'dd.MM.yyyy',
                                 ).format(picked!);
                               },
@@ -354,6 +228,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 fontSize: 15,
                               ),
                             ),
+                            SizedBox(height: 15),
                             TextFormField(
                               style: TextStyle(
                                 fontSize: 20,
@@ -377,7 +252,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   borderSide: BorderSide(color: taskaPurplish),
                                 ),
                               ),
-                              controller: _doBeforeTimeController,
+                              controller: _timeController,
                               onTap: () async {
                                 final TimeOfDay? picked = await showTimePicker(
                                   context: context,
@@ -390,7 +265,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 final minute = picked?.minute
                                     .toString()
                                     .padLeft(2, '0');
-                                _doBeforeTimeController.text = '$hour:$minute';
+                                _timeController.text = '$hour:$minute';
                               },
                             ),
                           ],
@@ -399,25 +274,201 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ),
                   ],
                 ),
-              ],
-              SizedBox(height: 15),
-              Text(
-                "Приоритет",
-                style: TextStyle(color: taskaTextGray, fontSize: 15),
-              ),
-              SizedBox(height: 15),
-              TaskaToggleButtons(
-                selectedPriority: _selectedPriority,
-                onPriorityChanged: _updateSelectedPriority,
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 250, child: TaskaElevatedButton(text: "Добавить", onPressed: () {})),
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: CustomCheckBox(
+                        checkedIcon: Icons.check,
+                        borderRadius: 12,
+                        checkBoxSize: 40,
+                        checkedIconColor: taskaTextDark,
+                        borderColor: taskaTextDark,
+                        shouldShowBorder: true,
+                        checkedFillColor: taskaGreen,
+                        value: _showDeadlineForms,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _showDeadlineForms = value ?? false;
+                          });
+                        },
+                      ),
+                    ),
+                    Text(
+                      "Есть срок?",
+                      style: TextStyle(color: taskaTextGray, fontSize: 15),
+                    ),
+                  ],
+                ),
+                if (_showDeadlineForms) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Выполнить до",
+                                style: TextStyle(
+                                  color: taskaTextGray,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              TextFormField(
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: taskaTextDark,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(20),
+                                  hint: Text(
+                                    currentTime,
+                                    style: TextStyle(
+                                      color: taskaTextGray,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(color: taskaBorder),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(
+                                      color: taskaPurplish,
+                                    ),
+                                  ),
+                                ),
+                                controller: _doBeforeDateController,
+                                onTap: () async {
+                                  final DateTime? picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime(2100),
+                                  );
+                                  _doBeforeDateController.text = DateFormat(
+                                    'dd.MM.yyyy',
+                                  ).format(picked!);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Время",
+                                style: TextStyle(
+                                  color: taskaTextGray,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              TextFormField(
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: taskaTextDark,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(20),
+                                  hint: Text(
+                                    currentTime,
+                                    style: TextStyle(
+                                      color: taskaTextGray,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(color: taskaBorder),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(
+                                      color: taskaPurplish,
+                                    ),
+                                  ),
+                                ),
+                                controller: _doBeforeTimeController,
+                                onTap: () async {
+                                  final TimeOfDay? picked =
+                                      await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                      );
+                                  final hour = picked?.hour.toString().padLeft(
+                                    2,
+                                    '0',
+                                  );
+                                  final minute = picked?.minute
+                                      .toString()
+                                      .padLeft(2, '0');
+                                  _doBeforeTimeController.text =
+                                      '$hour:$minute';
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
-              ),
-            ],
+                SizedBox(height: 15),
+                Text(
+                  "Приоритет",
+                  style: TextStyle(color: taskaTextGray, fontSize: 15),
+                ),
+                SizedBox(height: 15),
+                TaskaToggleButtons(
+                  selectedPriority: _selectedPriority,
+                  onPriorityChanged: _updateSelectedPriority,
+                ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 250,
+                      child: TaskaElevatedButton(
+                        text: "Добавить",
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            taskBox.add({
+                              'name': _nameController.text,
+                              'note': _noteController.text,
+                              'tag': _tagController.text,
+                              'date': _dateController.text,
+                              'time': _timeController.text,
+                              'doBeforeDate': _doBeforeDateController.text,
+                              'doBeforeTime': _doBeforeTimeController.text,
+                              'priority': _selectedPriority,
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Заполните поля, выделенные красным',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

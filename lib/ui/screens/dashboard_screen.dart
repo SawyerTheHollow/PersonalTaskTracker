@@ -6,8 +6,6 @@ import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:first_flutter_project/injection/service_locator.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key});

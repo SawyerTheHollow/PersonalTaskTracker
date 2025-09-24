@@ -11,13 +11,6 @@ void main() async {
   //hive
  setupLocator();
 
- Task testTask = Task(
-   name: "Созвониться с заказчиком",
-   date: DateTime(2025, 6, 10, 10, 0),
-   priority: "Низкий",
-   tag: "Работа",
- );
-
   //TODO Локализация календаря
   //await initializeDateFormatting('ru', '');
 
