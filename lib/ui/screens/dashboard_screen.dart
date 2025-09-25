@@ -1,9 +1,11 @@
+import 'package:first_flutter_project/injection/service_locator.dart';
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -14,55 +16,44 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
+
+
 class _DashboardScreenState extends State<DashboardScreen> {
+  final taskBox = getIt<Box>();
+
   //Задачи
   DateTime _selectedDay = DateTime.now();
-
-  final Map<DateTime, List<Task>> _tasks = {
-    DateTime(2025, 9, 21): [
-      Task(
-        name: "Созвониться с заказчиком",
-        date: DateTime(2025, 6, 10, 10, 0),
-        priority: "Низкий",
-        tag: "Работа",
-      ),
-      Task(
-        name: "Заказать бабушке подарок",
-        date: DateTime(2025, 6, 10, 14, 0),
-        priority: "Средний",
-        tag: "Семья",
-      ),
-      Task(
-        name: "Подготовить доклад",
-        date: DateTime(2025, 6, 10, 14, 0),
-        priority: "Средний",
-        tag: "Учёба",
-      ),
-      Task(
-        name: "Сдать отчёт",
-        date: DateTime(2025, 6, 10, 14, 0),
-        priority: "Средний",
-        tag: "Учёба",
-      ),
-      Task(
-        name: "Что-то",
-        date: DateTime(2025, 6, 10, 14, 0),
-        priority: "Средний",
-      ),
-      Task(
-        name: "Что-то",
-        date: DateTime(2025, 6, 10, 14, 0),
-        priority: "Средний",
-      ),
-    ],
-  };
-
-  /*List<Task> _getTasksForDay(DateTime day) {
-    return _tasks[DateTime(day.year, day.month, day.day)] ?? [];
-  }*/
-
   List<Task> _getTasksForDay(DateTime day) {
-    return _tasks[DateTime(day.year, day.month, day.day)] ?? [];
+    final List<Task> tasks = [];
+    final formattedDay = DateFormat('yyyy-MM-dd').format(day).toString();
+
+    for (final key in taskBox.keys) {
+      final taskData = taskBox.get(key);
+      final preFormattedDate = DateFormat('yyyy-MM-dd').parse(taskData["date"]);
+      final formattedDate = DateFormat('yyyy-MM-dd').format(preFormattedDate).toString();
+
+      if (formattedDate == formattedDay) {
+        tasks.add(
+          Task(
+            title: taskData["name"],
+            text: taskData["note"],
+            tag: taskData["tag"],
+            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+            //Не нужно на этом экране
+            /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+            /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+            priority: taskData["priority"],
+          ),
+        );
+      }
+    }
+    ;
+
+    return tasks;
   }
 
   Widget _buildTaskList() {
@@ -107,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ), //Чек-марки
                 title: Text(
-                  task.name,
+                  task.title,
                   style: TextStyle(color: taskaTextDark, fontSize: 17),
                 ),
                 subtitle: RichText(
@@ -131,7 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 onTap: () {
                   //TODO Выделение чек-марка
-                  print('Событие: ${task.name}');
+                  print('Событие: ${task.title}');
                 },
                 trailing: Icon(Icons.info_outline, color: Color(0xffafd77e)),
               ),
@@ -239,11 +230,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddTaskScreen()),
-              );
+              ).then((value) {
+                setState(() {});
+              });
             },
             icon: Icon(Icons.add_box_outlined, size: 35, color: taskaTextDark),
             padding: EdgeInsets.only(right: 20),
@@ -254,7 +247,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Padding(
             padding: EdgeInsets.all(20),
-            child: TaskaTextFormField(labelText: "Что надо сделать?", height: 15,),
+            child: TaskaTextFormField(
+              labelText: "Что надо сделать?",
+              height: 15,
+            ),
           ),
           Padding(
             padding: EdgeInsets.all(20),

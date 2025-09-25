@@ -17,13 +17,17 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  var taskBox = getIt<Box>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
   TextEditingController _tagController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+  DateTime? _date = null;
   TextEditingController _timeController = TextEditingController();
-  TextEditingController _doBeforeDateController = TextEditingController();
-  TextEditingController _doBeforeTimeController = TextEditingController();
+  TimeOfDay? _time = TimeOfDay.now();
+  TextEditingController _deadlineDateController = TextEditingController();
+  TextEditingController _deadlineTimeController = TextEditingController();
+  String _selectedTag = "Без тега";
   String _selectedPriority = "Низкий";
   bool _showDeadlineForms = false;
 
@@ -46,11 +50,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var taskBox = getIt<Box>();
     final String currentDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final String currentTime = DateFormat('hh.mm').format(DateTime.now());
-    _tagController.text = "Без тега";
-    _dateController.text = currentDate;
+    //_dateController.text = currentDate;
 
     return Scaffold(
       appBar: AppBar(
@@ -144,6 +146,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   onChanged: (String? value) {
                     setState(() {
                       _tagController.text = value ?? "";
+                      _selectedTag = _tagController.text;
                     });
                   },
                   decoration: InputDecoration(
@@ -176,6 +179,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             ),
                             SizedBox(height: 15),
                             TextFormField(
+                              validator: _validator,
                               style: TextStyle(
                                 fontSize: 20,
                                 color: taskaTextDark,
@@ -209,6 +213,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 _dateController.text = DateFormat(
                                   'dd.MM.yyyy',
                                 ).format(picked!);
+                                _date = picked;
+                                //_date = DateFormat('yyyy-MM-dd').format(picked);
                               },
                             ),
                           ],
@@ -266,6 +272,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     .toString()
                                     .padLeft(2, '0');
                                 _timeController.text = '$hour:$minute';
+
+                                _time = picked;
                               },
                             ),
                           ],
@@ -342,7 +350,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: _doBeforeDateController,
+                                controller: _deadlineDateController,
                                 onTap: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
@@ -350,7 +358,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     firstDate: DateTime(2000),
                                     lastDate: DateTime(2100),
                                   );
-                                  _doBeforeDateController.text = DateFormat(
+                                  _deadlineDateController.text = DateFormat(
                                     'dd.MM.yyyy',
                                   ).format(picked!);
                                 },
@@ -397,7 +405,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: _doBeforeTimeController,
+                                controller: _deadlineTimeController,
                                 onTap: () async {
                                   final TimeOfDay? picked =
                                       await showTimePicker(
@@ -411,7 +419,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   final minute = picked?.minute
                                       .toString()
                                       .padLeft(2, '0');
-                                  _doBeforeTimeController.text =
+                                  _deadlineTimeController.text =
                                       '$hour:$minute';
                                 },
                               ),
@@ -442,14 +450,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         text: "Добавить",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            final dateAndTimeCombined = DateTime(
+                              _date!.year,
+                              _date!.month,
+                              _date!.day,
+                              _time!.hour,
+                              _time!.minute,
+                            ).toUtc().toIso8601String();
                             taskBox.add({
                               'name': _nameController.text,
                               'note': _noteController.text,
-                              'tag': _tagController.text,
-                              'date': _dateController.text,
-                              'time': _timeController.text,
-                              'doBeforeDate': _doBeforeDateController.text,
-                              'doBeforeTime': _doBeforeTimeController.text,
+                              'tag': _selectedTag,
+                              //TODO Уточнить отличия дат ниже \/
+                              'date': dateAndTimeCombined,
+                              //'date': _dateController.text,
+                              //'time': _timeController.text,
+                              'deadlineDate': _deadlineDateController.text,
+                              'deadlineTime': _deadlineTimeController.text,
                               'priority': _selectedPriority,
                             });
                             Navigator.pop(context);
@@ -464,6 +481,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           }
                         },
                       ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        for (final key in taskBox.keys) {
+                         // taskBox.delete(key);
+                          final taskData = taskBox.get(key);
+                          if (taskData["date"] != null &&
+                              taskData["date"] != '') {
+                            print(taskData["date"]);
+                            final preFormattedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).parse(taskData["date"]);
+                            final formattedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(preFormattedDate);
+                          }
+                        }
+                      },
+                      child: Text("data"),
                     ),
                   ],
                 ),

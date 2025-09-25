@@ -1,25 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 class Task extends HiveObject {
 
-  final String name;
-  final String? note;
+  final String title;
+  final String? text;
   final String? tag;
   final DateTime date;
-  final bool? deadline;
-  final DateFormat? deadlineDate;
+  //final TimeOfDay? time;
+  final DateTime? deadlineDate;
+  final TimeOfDay? deadlineTime;
   final String priority;
   final bool completed;
 
   Task({
-    required this.name,
+    required this.title,
     required this.date,
     required this.priority,
-    this.note,
+    //this.time,
+    this.text,
     this.tag,
-    this.deadline,
     this.deadlineDate,
+    this.deadlineTime,
     this.completed = false
   });
 }
