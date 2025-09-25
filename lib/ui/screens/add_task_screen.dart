@@ -482,7 +482,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                    ElevatedButton(
+                    /*ElevatedButton(
                       onPressed: () {
                         for (final key in taskBox.keys) {
                          // taskBox.delete(key);
@@ -500,7 +500,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         }
                       },
                       child: Text("data"),
-                    ),
+                    ),*/
                   ],
                 ),
               ],
