@@ -2,6 +2,7 @@ import 'package:first_flutter_project/injection/service_locator.dart';
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
 import 'package:first_flutter_project/ui/screens/tasks_screen.dart';
+import 'package:first_flutter_project/ui/shared/taska_task_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
@@ -58,83 +59,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ;
 
     return tasks;
-  }
-
-  Widget _buildTaskList() {
-    final tasks = _getTasksForDay(_selectedDay);
-
-    if (tasks.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(
-          child: Text(
-            'Нет событий на этот день',
-            style: TextStyle(color: taskaTextGray),
-          ),
-        ),
-      );
-    }
-
-    return SizedBox(
-      height: 450,
-      child: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          final task = tasks[index];
-          return Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-              side: BorderSide(color: taskaBorder),
-            ),
-            color: taskaBackground,
-            margin: EdgeInsets.symmetric(vertical: 4),
-            child: Container(
-              height: 80,
-              child: ListTile(
-                //TODO Добавить чек-марки
-                leading: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black,
-                  ),
-                ), //Чек-марки
-                title: Text(
-                  task.title,
-                  style: TextStyle(color: taskaTextDark, fontSize: 17),
-                ),
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: [
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Icon(
-                          Icons.local_offer_outlined,
-                          size: 15,
-                          color: taskaPurplish,
-                        ),
-                      ),
-                      TextSpan(text: " "),
-                      TextSpan(
-                        text: task.tag,
-                        style: TextStyle(fontSize: 15, color: taskaTextGray),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  //TODO Выделение чек-марка
-                  print('Событие: ${task.title}');
-                },
-                trailing: Icon(Icons.info_outline, color: Color(0xffafd77e)),
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 
   //Календарь
@@ -336,7 +260,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: _buildTaskList(),
+                child: TaskaTaskList(
+                  tasks: _getTasksForDay(_selectedDay),
+                ),
               ),
             ],
           ),
