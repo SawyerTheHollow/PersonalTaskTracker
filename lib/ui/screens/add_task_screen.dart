@@ -28,7 +28,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   TextEditingController _deadlineDateController = TextEditingController();
   TextEditingController _deadlineTimeController = TextEditingController();
   String _selectedTag = "Без тега";
-  String _selectedPriority = "Низкий";
+  String _selectedValue = "Низкий";
   bool _showDeadlineForms = false;
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -36,7 +36,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   //Функция для обновления значения _selectedPriority
   void _updateSelectedPriority(String newPriority) {
     setState(() {
-      _selectedPriority = newPriority;
+      _selectedValue = newPriority;
     });
   }
 
@@ -437,9 +437,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 SizedBox(height: 15),
                 TaskaToggleButtons(
-                  selectedPriority: _selectedPriority,
-                  onPriorityChanged: _updateSelectedPriority,
+                  minimumSize: Size(110, 45),
+                  spacing: 20,
+                  selectedValue: _selectedValue,
+                  onValueChanged: (String newValue) {
+                    setState(() {
+                      _selectedValue = newValue;
+                      print("Из мейн скрина $_selectedValue");
+                    });
+                  },
+                  buttons: ["Низкий", "Средний", "Высокий"],
                 ),
+
+               /* TaskaPriorityToggleButtons(
+                  selectedPriority: _selectedValue,
+                  onPriorityChanged: _updateSelectedPriority,
+                ),*/
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -467,7 +480,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               //'time': _timeController.text,
                               'deadlineDate': _deadlineDateController.text,
                               'deadlineTime': _deadlineTimeController.text,
-                              'priority': _selectedPriority,
+                              'priority': _selectedValue,
                             });
                             Navigator.pop(context);
                           } else {
@@ -482,14 +495,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                    /*ElevatedButton(
+                   /* ElevatedButton(
                       onPressed: () {
                         for (final key in taskBox.keys) {
                          // taskBox.delete(key);
                           final taskData = taskBox.get(key);
                           if (taskData["date"] != null &&
                               taskData["date"] != '') {
-                            print(taskData["date"]);
+                            print(taskData);
                             final preFormattedDate = DateFormat(
                               'yyyy-MM-dd',
                             ).parse(taskData["date"]);

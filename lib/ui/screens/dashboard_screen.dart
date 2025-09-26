@@ -1,6 +1,7 @@
 import 'package:first_flutter_project/injection/service_locator.dart';
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
+import 'package:first_flutter_project/ui/screens/tasks_screen.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
@@ -16,10 +17,12 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-
-
 class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
+  //Возможность свайпа на экран "Задачи"
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  List<String> pages = ['Мои задачи', 'Задачи'];
 
   //Задачи
   DateTime _selectedDay = DateTime.now();
@@ -30,8 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     for (final key in taskBox.keys) {
       final taskData = taskBox.get(key);
       final preFormattedDate = DateFormat('yyyy-MM-dd').parse(taskData["date"]);
-      final formattedDate = DateFormat('yyyy-MM-dd').format(preFormattedDate).toString();
-
+      final formattedDate = DateFormat(
+        'yyyy-MM-dd',
+      ).format(preFormattedDate).toString();
       if (formattedDate == formattedDay) {
         tasks.add(
           Task(
@@ -225,7 +229,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
-        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
+        title: Text(
+          pages[_currentPage],
+          style: TextStyle(color: taskaTextDark),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         actions: [
@@ -243,82 +250,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
+        },
+        physics: AlwaysScrollableScrollPhysics(),
+        scrollDirection: Axis.horizontal,
         children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: TaskaTextFormField(
-              labelText: "Что надо сделать?",
-              height: 15,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Row(
-              children: [
-                TaskaTitleText(
-                  topText: DateFormat('dd MMMM').format(_selectedDay),
-                  bottomText:
-                      "${_getTasksForDay(_selectedDay).length} задачи на сегодня",
+          Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: TaskaTextFormField(
+                  labelText: "Что надо сделать?",
+                  height: 15,
                 ),
-                Spacer(),
-                IconButton(
-                  onPressed: () => _showOverlay(context),
-                  icon: Icon(Icons.calendar_month, color: taskaTextDark),
-                  iconSize: 30,
-                  style: IconButton.styleFrom(
-                    side: BorderSide(color: taskaBorder),
-                    shape: CircleBorder(),
-                    backgroundColor: Colors.transparent,
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    TaskaTitleText(
+                      topText: DateFormat('dd MMMM').format(_selectedDay),
+                      bottomText:
+                          "${_getTasksForDay(_selectedDay).length} задачи на сегодня",
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () => _showOverlay(context),
+                      icon: Icon(Icons.calendar_month, color: taskaTextDark),
+                      iconSize: 30,
+                      style: IconButton.styleFrom(
+                        side: BorderSide(color: taskaBorder),
+                        shape: CircleBorder(),
+                        backgroundColor: Colors.transparent,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 130,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 30,
-                    itemBuilder: (context, index) {
-                      DateTime date = DateTime.now().add(Duration(days: index));
-                      return Container(
-                        width: 60,
-                        margin: EdgeInsets.symmetric(horizontal: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: taskaBorder),
-                          borderRadius: BorderRadius.circular(18),
-                          color: taskaBackground,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              DateFormat.E().format(date),
-                              style: TextStyle(fontSize: 12),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 130,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 30,
+                        itemBuilder: (context, index) {
+                          DateTime date = DateTime.now().add(
+                            Duration(days: index),
+                          );
+                          return Container(
+                            width: 60,
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: taskaBorder),
+                              borderRadius: BorderRadius.circular(18),
+                              color: taskaBackground,
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              DateFormat.d().format(date),
-                              style: TextStyle(fontSize: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  DateFormat.E().format(date),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  DateFormat.d().format(date),
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
+                child: _buildTaskList(),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-            child: _buildTaskList(),
-          ),
+          TasksScreen(),
         ],
       ),
     );
