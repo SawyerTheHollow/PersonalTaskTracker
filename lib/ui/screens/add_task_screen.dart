@@ -443,16 +443,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   onValueChanged: (String newValue) {
                     setState(() {
                       _selectedValue = newValue;
-                      print("Из мейн скрина $_selectedValue");
                     });
                   },
                   buttons: ["Низкий", "Средний", "Высокий"],
                 ),
-
-               /* TaskaPriorityToggleButtons(
-                  selectedPriority: _selectedValue,
-                  onPriorityChanged: _updateSelectedPriority,
-                ),*/
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
