@@ -21,22 +21,23 @@ class TasksScreen extends StatefulWidget {
 }
 
 String _selectedValue = "Все";
+TextEditingController _searchBarController = TextEditingController();
 
 class _TasksScreenState extends State<TasksScreen> {
   final taskBox = getIt<Box>();
-  //
-  //tasks.clear();
 
   List<Task> _getAllTasks(String selectedValue) {
     List<Task> tasks = [];
-
-    if (_selectedValue == "Все") {
+    if (_searchBarController.text != ""){
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
+        String title = taskData["title"];
+        String text = taskData["text"];
+        if (title.toLowerCase().contains(_searchBarController.text.toLowerCase()) || text.toLowerCase().contains(_searchBarController.text.toLowerCase()))
         tasks.add(
           Task(
-            title: taskData["name"],
-            text: taskData["note"],
+            title: taskData["title"],
+            text: taskData["text"],
             tag: taskData["tag"],
             date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
             //Не нужно на этом экране
@@ -47,6 +48,28 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
             priority: taskData["priority"],
+            hiveIndex: key
+          ),
+        );
+      }
+    } else if (_selectedValue == "Все") {
+      for (final key in taskBox.keys) {
+        final taskData = taskBox.get(key);
+        tasks.add(
+          Task(
+            title: taskData["title"],
+            text: taskData["text"],
+            tag: taskData["tag"],
+            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+            //Не нужно на этом экране
+            /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+            /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+            priority: taskData["priority"],
+            hiveIndex: key
           ),
         );
       }
@@ -56,8 +79,8 @@ class _TasksScreenState extends State<TasksScreen> {
         if (taskData["tag"] == _selectedValue) {
           tasks.add(
             Task(
-              title: taskData["name"],
-              text: taskData["note"],
+              title: taskData["title"],
+              text: taskData["text"],
               tag: taskData["tag"],
               date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
               //Не нужно на этом экране
@@ -68,6 +91,7 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
               priority: taskData["priority"],
+              hiveIndex: key
             ),
           );
         }
@@ -80,28 +104,56 @@ class _TasksScreenState extends State<TasksScreen> {
   List<Task> _getCompletedTasks() {
     List<Task> tasks = [];
 
-
+    if (_selectedValue == "Все") {
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
         if (taskData["isDone"] == true) {
-        tasks.add(
-          Task(
-            title: taskData["name"],
-            text: taskData["note"],
-            tag: taskData["tag"],
-            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-            //Не нужно на этом экране
-            /*deadlineDate: DateFormat(
+          tasks.add(
+            Task(
+              title: taskData["title"],
+              text: taskData["text"],
+              tag: taskData["tag"],
+              date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+              //Не нужно на этом экране
+              /*deadlineDate: DateFormat(
               'dd.MM.yyyy',
             ).parse(taskData['deadlineDate']),*/
-            /*deadlineTime: TimeOfDay.fromDateTime(
+              /*deadlineTime: TimeOfDay.fromDateTime(
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
-            priority: taskData["priority"],
-          ),
-        );
+              priority: taskData["priority"],
+              hiveIndex: key
+            ),
+          );
+        }
+      }
+    } else {
+      for (final key in taskBox.keys) {
+        final taskData = taskBox.get(key);
+        if (taskData["isDone"] == true) {
+          if (taskData["tag"] == _selectedValue) {
+            tasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+                /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+                priority: taskData["priority"],
+                hiveIndex: key
+              ),
+            );
+          }
+        }
       }
     }
+
     return tasks;
   }
 
@@ -119,7 +171,7 @@ class _TasksScreenState extends State<TasksScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
-        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
+        title: Text("Задачи", style: TextStyle(color: taskaTextDark)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         actions: [
@@ -150,7 +202,12 @@ class _TasksScreenState extends State<TasksScreen> {
                   children: [
                     TaskaTextFormField(
                       labelText: "Что надо сделать?",
+                      controller: _searchBarController,
                       height: 15,
+                      prefixIcon: Icon(Icons.search, color: taskaTextDark,),
+                      onChanged: (string){setState(() {
+                        _selectedValue = "Все";
+                      });},
                     ),
                     SizedBox(height: 20),
                     TaskaToggleButtons(
@@ -182,89 +239,18 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   ),
                   Spacer(),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.arrow_forward_ios, color: taskaPurplish,)),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.arrow_forward_ios, color: taskaPurplish),
+                  ),
                 ],
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            TaskaTaskSliverList(tasks: _getCompletedTasks())
+            TaskaTaskSliverList(tasks: _getCompletedTasks()),
           ],
         ),
       ),
-
-      /*CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(child: Text("data")),
-
-              SliverToBoxAdapter(child: Text("data")),
-            ],
-          ),*/
     );
-
-    /*return Scaffold(
-      backgroundColor: taskaBackground,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () async {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-        scrolledUnderElevation: 0,
-        toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddTaskScreen()),
-              ).then((value) {
-                setState(() {});
-              });
-            },
-            icon: Icon(Icons.add_box_outlined, size: 35, color: taskaTextDark),
-            padding: EdgeInsets.only(right: 20),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            TaskaTextFormField(labelText: "Что надо сделать?", height: 15),
-            SizedBox(height: 20),
-            TaskaToggleButtons(
-              inactiveBorder: true,
-              minimumSize: Size(50, 35),
-              buttons: ["Все", "Покупки", "Работа", "Семья", "Учёба"],
-              selectedValue: _selectedValue,
-              onValueChanged: (String newValue) {
-                setState(() {
-                  _selectedValue = newValue;
-                });
-              },
-            ),
-
-            CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: Text("data")),
-                TaskaTaskSliverList(tasks: _getAllTasks(_selectedValue)),
-                SliverToBoxAdapter(child: Text("data")),
-              ],
-            ),
-
-            /* Column(
-                children: [
-                  TaskaTaskList(tasks: _getAllTasks(_selectedValue)),
-                ],
-              ),*/
-          ],
-        ),
-      ),
-    );*/
   }
 }

@@ -18,8 +18,8 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   var taskBox = getIt<Box>();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _noteController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
   TextEditingController _tagController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   DateTime? _date = null;
@@ -77,7 +77,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 15),
                 TaskaTextFormField(
                   labelText: "Текст наименования задачи",
-                  controller: _nameController,
+                  controller: _titleController,
                   validator: _validator,
                 ),
                 SizedBox(height: 15),
@@ -88,7 +88,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 15),
                 TaskaTextFormField(
                   labelText: "Текст примечания",
-                  controller: _noteController,
+                  controller: _textController,
                 ),
                 SizedBox(height: 15),
                 Text(
@@ -465,8 +465,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               _time!.minute,
                             ).toUtc().toIso8601String();
                             taskBox.add({
-                              'name': _nameController.text,
-                              'note': _noteController.text,
+                              'title': _titleController.text,
+                              'text': _textController.text,
                               'tag': _selectedTag,
                               //TODO Уточнить отличия дат ниже \/
                               'date': dateAndTimeCombined,
@@ -490,15 +490,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                     ElevatedButton(
+                    /* ElevatedButton(
                       onPressed: () {
                         /*for(int key in taskBox.keys ) {
                           taskBox.delete(key);
                         }*/
 
                         taskBox.add({
-                          'name': _nameController.text,
-                          'note': _noteController.text,
+                          'title': _titleController.text,
+                          'text': _textController.text,
                           'tag': _selectedTag,
                           //TODO Уточнить отличия дат ниже \/
                           'date': DateTime.now(),
@@ -511,7 +511,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         });
                       },
                       child: Text("data"),
-                    ),
+                    ),*/
                   ],
                 ),
               ],

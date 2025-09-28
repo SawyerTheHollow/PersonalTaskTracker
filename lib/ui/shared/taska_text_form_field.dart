@@ -7,13 +7,17 @@ class TaskaTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool obscureText;
   final double height;
+  final Widget? prefixIcon;
+  final void Function(String)? onChanged;
   TaskaTextFormField({
     Key? key,
     required this.labelText,
     this.controller,
     this.validator,
     this.obscureText = false,
-    this.height = 20
+    this.height = 20,
+    this.prefixIcon,
+    this.onChanged
   }) : super(key: key);
   @override
   _TaskaTextFormFieldState createState() => _TaskaTextFormFieldState();
@@ -26,7 +30,9 @@ class _TaskaTextFormFieldState extends State<TaskaTextFormField> {
       obscureText: widget.obscureText,
       controller: widget.controller,
       validator: widget.validator,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
+        prefixIcon: widget.prefixIcon,
         contentPadding: EdgeInsets.all(widget.height),
         labelText: widget.labelText,
         labelStyle: TextStyle(color: taskaTextGray),

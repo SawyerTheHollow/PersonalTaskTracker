@@ -18,42 +18,84 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
+TextEditingController _searchBarController = TextEditingController();
+
 class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
-
   //Задачи
   DateTime _selectedDay = DateTime.now();
+
   List<Task> _getTasksForDay(DateTime day) {
     final List<Task> tasks = [];
     final formattedDay = DateFormat('yyyy-MM-dd').format(day).toString();
 
-    for (final key in taskBox.keys) {
-      final taskData = taskBox.get(key);
-      final preFormattedDate = DateFormat('yyyy-MM-dd').parse(taskData["date"]);
-      final formattedDate = DateFormat(
-        'yyyy-MM-dd',
-      ).format(preFormattedDate).toString();
-      if (formattedDate == formattedDay) {
-        tasks.add(
-          Task(
-            title: taskData["name"],
-            text: taskData["note"],
-            tag: taskData["tag"],
-            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-            //Не нужно на этом экране
-            /*deadlineDate: DateFormat(
+    if (_searchBarController.text != "") {
+      for (final key in taskBox.keys) {
+        final taskData = taskBox.get(key);
+        String title = taskData["title"];
+        String text = taskData["text"];
+        final preFormattedDate = DateFormat(
+          'yyyy-MM-dd',
+        ).parse(taskData["date"]);
+        final formattedDate = DateFormat(
+          'yyyy-MM-dd',
+        ).format(preFormattedDate).toString();
+        if (formattedDate == formattedDay &&
+            (title.toLowerCase().contains(
+                  _searchBarController.text.toLowerCase(),
+                ) ||
+                text.toLowerCase().contains(
+                  _searchBarController.text.toLowerCase(),
+                )))
+          tasks.add(
+            Task(
+              title: taskData["title"],
+              text: taskData["text"],
+              tag: taskData["tag"],
+              date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+              //Не нужно на этом экране
+              /*deadlineDate: DateFormat(
               'dd.MM.yyyy',
             ).parse(taskData['deadlineDate']),*/
-            /*deadlineTime: TimeOfDay.fromDateTime(
+              /*deadlineTime: TimeOfDay.fromDateTime(
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
-            priority: taskData["priority"],
-          ),
-        );
+              priority: taskData["priority"],
+              hiveIndex: key
+            ),
+          );
       }
+    } else {
+      for (final key in taskBox.keys) {
+        final taskData = taskBox.get(key);
+        final preFormattedDate = DateFormat(
+          'yyyy-MM-dd',
+        ).parse(taskData["date"]);
+        final formattedDate = DateFormat(
+          'yyyy-MM-dd',
+        ).format(preFormattedDate).toString();
+        if (formattedDate == formattedDay) {
+          tasks.add(
+            Task(
+              title: taskData["title"],
+              text: taskData["text"],
+              tag: taskData["tag"],
+              date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+              //Не нужно на этом экране
+              /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+              /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+              priority: taskData["priority"],
+              hiveIndex: key
+            ),
+          );
+        }
+      }
+      ;
     }
-    ;
-
     return tasks;
   }
 
@@ -158,10 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
-        title: Text(
-          "Мои задачи",
-          style: TextStyle(color: taskaTextDark),
-        ),
+        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         actions: [
@@ -179,88 +218,91 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body:
-          Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: TaskaTextFormField(
-                  labelText: "Что надо сделать?",
-                  height: 15,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    TaskaTitleText(
-                      topText: DateFormat('dd MMMM').format(_selectedDay),
-                      bottomText:
-                          "${_getTasksForDay(_selectedDay).length} задачи на сегодня",
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () => _showOverlay(context),
-                      icon: Icon(Icons.calendar_month, color: taskaTextDark),
-                      iconSize: 30,
-                      style: IconButton.styleFrom(
-                        side: BorderSide(color: taskaBorder),
-                        shape: CircleBorder(),
-                        backgroundColor: Colors.transparent,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 130,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 30,
-                        itemBuilder: (context, index) {
-                          DateTime date = DateTime.now().add(
-                            Duration(days: index),
-                          );
-                          return Container(
-                            width: 60,
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: taskaBorder),
-                              borderRadius: BorderRadius.circular(18),
-                              color: taskaBackground,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  DateFormat.E().format(date),
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  DateFormat.d().format(date),
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: TaskaTaskList(tasks: _getTasksForDay(_selectedDay)),
-              ),
-            ],
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: TaskaTextFormField(
+              controller: _searchBarController,
+              labelText: "Что надо сделать?",
+              height: 15,
+              prefixIcon: Icon(Icons.search, color: taskaTextDark),
+              onChanged: (string) {
+                setState(() {});
+              },
+            ),
           ),
-
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                TaskaTitleText(
+                  topText: DateFormat('dd MMMM').format(_selectedDay),
+                  bottomText:
+                      "${_getTasksForDay(_selectedDay).length} задачи на сегодня",
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: () => _showOverlay(context),
+                  icon: Icon(Icons.calendar_month, color: taskaTextDark),
+                  iconSize: 30,
+                  style: IconButton.styleFrom(
+                    side: BorderSide(color: taskaBorder),
+                    shape: CircleBorder(),
+                    backgroundColor: Colors.transparent,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 130,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 30,
+                    itemBuilder: (context, index) {
+                      DateTime date = DateTime.now().add(Duration(days: index));
+                      return Container(
+                        width: 60,
+                        margin: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: taskaBorder),
+                          borderRadius: BorderRadius.circular(18),
+                          color: taskaBackground,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              DateFormat.E().format(date),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              DateFormat.d().format(date),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
+              child: TaskaTaskList(tasks: _getTasksForDay(_selectedDay)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

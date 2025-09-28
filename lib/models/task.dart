@@ -13,6 +13,7 @@ class Task extends HiveObject {
   final TimeOfDay? deadlineTime;
   final String priority;
   final bool isDone;
+  final dynamic hiveIndex;
 
   Task({
     required this.title,
@@ -23,6 +24,7 @@ class Task extends HiveObject {
     this.tag,
     this.deadlineDate,
     this.deadlineTime,
-    this.isDone = false
+    this.isDone = false,
+    required this.hiveIndex
   });
 }
