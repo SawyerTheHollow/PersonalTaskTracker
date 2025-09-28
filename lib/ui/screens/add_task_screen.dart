@@ -475,6 +475,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               'deadlineDate': _deadlineDateController.text,
                               'deadlineTime': _deadlineTimeController.text,
                               'priority': _selectedValue,
+                              'isDone': false,
                             });
                             Navigator.pop(context);
                           } else {
@@ -489,25 +490,28 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                   /* ElevatedButton(
+                     ElevatedButton(
                       onPressed: () {
-                        for (final key in taskBox.keys) {
-                         // taskBox.delete(key);
-                          final taskData = taskBox.get(key);
-                          if (taskData["date"] != null &&
-                              taskData["date"] != '') {
-                            print(taskData);
-                            final preFormattedDate = DateFormat(
-                              'yyyy-MM-dd',
-                            ).parse(taskData["date"]);
-                            final formattedDate = DateFormat(
-                              'yyyy-MM-dd',
-                            ).format(preFormattedDate);
-                          }
-                        }
+                        /*for(int key in taskBox.keys ) {
+                          taskBox.delete(key);
+                        }*/
+
+                        taskBox.add({
+                          'name': _nameController.text,
+                          'note': _noteController.text,
+                          'tag': _selectedTag,
+                          //TODO Уточнить отличия дат ниже \/
+                          'date': DateTime.now(),
+                          //'date': _dateController.text,
+                          //'time': _timeController.text,
+                          'deadlineDate': _deadlineDateController.text,
+                          'deadlineTime': _deadlineTimeController.text,
+                          'priority': _selectedValue,
+                          'isDone': true,
+                        });
                       },
                       child: Text("data"),
-                    ),*/
+                    ),
                   ],
                 ),
               ],

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 class TaskaTaskList extends StatefulWidget {
   final List<Task> tasks;
+  final bool showCompleted;
   TaskaTaskList({
-    required this.tasks
+    required this.tasks,
+    this.showCompleted = false,
 });
 
 
@@ -30,7 +32,7 @@ class _TaskaTaskListState extends State<TaskaTaskList> {
     }
 
     return SizedBox(
-      height: 450,
+      height: 400,
       child: ListView.builder(
         itemCount: widget.tasks.length,
         itemBuilder: (context, index) {

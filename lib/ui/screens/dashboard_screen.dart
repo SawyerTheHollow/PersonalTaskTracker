@@ -20,10 +20,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
-  //Возможность свайпа на экран "Задачи"
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  List<String> pages = ['Мои задачи', 'Задачи'];
 
   //Задачи
   DateTime _selectedDay = DateTime.now();
@@ -150,11 +146,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: taskaBackground,
       key: _scaffoldKey,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TasksScreen()),
+            );
+          },
+          icon: Icon(Icons.arrow_forward_ios),
+        ),
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
         title: Text(
-          pages[_currentPage],
+          "Мои задачи",
           style: TextStyle(color: taskaTextDark),
         ),
         centerTitle: true,
@@ -174,16 +179,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
-        physics: AlwaysScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        children: [
+      body:
           Column(
             children: [
               Padding(
@@ -260,15 +256,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: TaskaTaskList(
-                  tasks: _getTasksForDay(_selectedDay),
-                ),
+                child: TaskaTaskList(tasks: _getTasksForDay(_selectedDay)),
               ),
             ],
           ),
-          TasksScreen(),
-        ],
-      ),
+
     );
   }
 }
