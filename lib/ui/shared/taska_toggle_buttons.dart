@@ -74,29 +74,3 @@ class _TaskaToggleButtonsState extends State<TaskaToggleButtons> {
     );
   }
 }
-
-/*Widget _priorityButton(String value) {
-    bool isSelected = widget.initialValueIndex == value;
-
-    return SizedBox(height: 45,
-      child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            widget.onPriorityChanged(value);
-          });
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          side: BorderSide(
-            color: isSelected ? taskaPurplish : taskaBorder,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 0,
-        ),
-        child: Text(value, style: TextStyle(
-          color: isSelected ? taskaTextDark : taskaTextGray,
-          fontSize: 15,
-        ),),
-      ),
-    );
-  }*/

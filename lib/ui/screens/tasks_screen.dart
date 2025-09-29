@@ -62,30 +62,7 @@ class _TasksScreenState extends State<TasksScreen> {
     } else if (_selectedValue == "Все") {
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
-        if(taskData['isDone'] == false){
-        tasks.add(
-          Task(
-            title: taskData["title"],
-            text: taskData["text"],
-            tag: taskData["tag"],
-            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-            //Не нужно на этом экране
-            /*deadlineDate: DateFormat(
-              'dd.MM.yyyy',
-            ).parse(taskData['deadlineDate']),*/
-            /*deadlineTime: TimeOfDay.fromDateTime(
-              DateFormat('hh:mm').parse(taskData['deadlineTime']),
-            ),*/
-            priority: taskData["priority"],
-            hiveIndex: key,
-          ),
-        );}
-      }
-    } else {
-      for (final key in taskBox.keys) {
-        final taskData = taskBox.get(key);
-        if (taskData["tag"] == _selectedValue) {
-          if(taskData['isDone'] == false){
+        if (taskData['isDone'] == false) {
           tasks.add(
             Task(
               title: taskData["title"],
@@ -102,7 +79,32 @@ class _TasksScreenState extends State<TasksScreen> {
               priority: taskData["priority"],
               hiveIndex: key,
             ),
-          );}
+          );
+        }
+      }
+    } else {
+      for (final key in taskBox.keys) {
+        final taskData = taskBox.get(key);
+        if (taskData["tag"] == _selectedValue) {
+          if (taskData['isDone'] == false) {
+            tasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+                /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          }
         }
       }
     }
@@ -237,7 +239,12 @@ class _TasksScreenState extends State<TasksScreen> {
                 ),
               ),
             ),
-            TaskaTaskSliverList(tasks: _getAllTasks(_selectedValue)),
+            TaskaTaskSliverList(
+              tasks: _getAllTasks(_selectedValue),
+              onUpdate: () {
+                setState(() {});
+              },
+            ),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
             SliverToBoxAdapter(
               child: Row(
