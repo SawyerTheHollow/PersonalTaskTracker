@@ -1,7 +1,7 @@
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:first_flutter_project/ui/shared/taska_dismissible.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DismissDirection;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -32,8 +32,25 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: TaskaDismissible(
-              background: Container(color: taskaRed),
-              secondaryBackground: Container(color: taskaGreen),
+              confirmDismiss: (direction) async {
+                if (direction == DismissDirection.startToEnd){
+                  setState(() {
+                    taskBox.put(task.hiveIndex, {
+                      'title': taskBox.get(task.hiveIndex)['title'],
+                      'text': taskBox.get(task.hiveIndex)['text'],
+                      'tag': taskBox.get(task.hiveIndex)['tag'],
+                      'date': taskBox.get(task.hiveIndex)['date'],
+                      'deadlineDate': taskBox.get(task.hiveIndex)['deadlineDate'],
+                      'deadlineTime': taskBox.get(task.hiveIndex)['deadlineTime'],
+                      'priority': taskBox.get(task.hiveIndex)['priority'],
+                      'isDone': true});
+
+                  });
+                }
+                return false;
+             },
+              background: Container(padding: EdgeInsetsGeometry.all(30), alignment:Alignment.centerLeft, color: taskaGreen, child: Icon(Icons.check, color: taskaBackground,),),
+              secondaryBackground: Container(padding: EdgeInsetsGeometry.all(30), alignment:Alignment.centerRight, color: taskaRed, child: Icon(Icons.delete, color: taskaBackground,),),
               key: ValueKey(task.hiveIndex),
               onDismissed: (direction) {
                 setState(() {

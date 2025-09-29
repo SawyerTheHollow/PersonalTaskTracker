@@ -12,11 +12,11 @@ Future<void> setupLocator() async {
   await Hive.initFlutter();
   final box = await Hive.openBox('taskStorage');
 
-
-   /* for(int key in box.keys ) {
+/*
+    for(int key in box.keys ) {
       box.delete(key);
-    }*/
-
+    }
+*/
   getIt.registerSingleton<Box>(box);
   getIt.registerLazySingleton<Dio>(() => Dio());
   getIt.registerLazySingleton<ApiClient>(() => ApiClient(getIt<Dio>()));

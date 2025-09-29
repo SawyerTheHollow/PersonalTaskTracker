@@ -12,7 +12,7 @@ class Task extends HiveObject {
   final DateTime? deadlineDate;
   final TimeOfDay? deadlineTime;
   final String priority;
-  final bool isDone;
+  bool isDone;
   final dynamic hiveIndex;
 
   Task({

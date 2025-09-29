@@ -28,33 +28,41 @@ class _TasksScreenState extends State<TasksScreen> {
 
   List<Task> _getAllTasks(String selectedValue) {
     List<Task> tasks = [];
-    if (_searchBarController.text != ""){
+    if (_searchBarController.text != "") {
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
         String title = taskData["title"];
         String text = taskData["text"];
-        if (title.toLowerCase().contains(_searchBarController.text.toLowerCase()) || text.toLowerCase().contains(_searchBarController.text.toLowerCase()))
-        tasks.add(
-          Task(
-            title: taskData["title"],
-            text: taskData["text"],
-            tag: taskData["tag"],
-            date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-            //Не нужно на этом экране
-            /*deadlineDate: DateFormat(
+        if (title.toLowerCase().contains(
+              _searchBarController.text.toLowerCase(),
+            ) ||
+            text.toLowerCase().contains(
+              _searchBarController.text.toLowerCase(),
+            ))
+          if (taskData['isDone'] == false) {
+            tasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
               'dd.MM.yyyy',
             ).parse(taskData['deadlineDate']),*/
-            /*deadlineTime: TimeOfDay.fromDateTime(
+                /*deadlineTime: TimeOfDay.fromDateTime(
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
-            priority: taskData["priority"],
-            hiveIndex: key
-          ),
-        );
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          }
       }
     } else if (_selectedValue == "Все") {
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
+        if(taskData['isDone'] == false){
         tasks.add(
           Task(
             title: taskData["title"],
@@ -69,14 +77,15 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
             priority: taskData["priority"],
-            hiveIndex: key
+            hiveIndex: key,
           ),
-        );
+        );}
       }
     } else {
       for (final key in taskBox.keys) {
         final taskData = taskBox.get(key);
         if (taskData["tag"] == _selectedValue) {
+          if(taskData['isDone'] == false){
           tasks.add(
             Task(
               title: taskData["title"],
@@ -91,13 +100,14 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
               priority: taskData["priority"],
-              hiveIndex: key
+              hiveIndex: key,
             ),
-          );
+          );}
         }
       }
     }
     ;
+
     return tasks;
   }
 
@@ -122,7 +132,7 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
               priority: taskData["priority"],
-              hiveIndex: key
+              hiveIndex: key,
             ),
           );
         }
@@ -146,7 +156,7 @@ class _TasksScreenState extends State<TasksScreen> {
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
                 priority: taskData["priority"],
-                hiveIndex: key
+                hiveIndex: key,
               ),
             );
           }
@@ -204,10 +214,12 @@ class _TasksScreenState extends State<TasksScreen> {
                       labelText: "Что надо сделать?",
                       controller: _searchBarController,
                       height: 15,
-                      prefixIcon: Icon(Icons.search, color: taskaTextDark,),
-                      onChanged: (string){setState(() {
-                        _selectedValue = "Все";
-                      });},
+                      prefixIcon: Icon(Icons.search, color: taskaTextDark),
+                      onChanged: (string) {
+                        setState(() {
+                          _selectedValue = "Все";
+                        });
+                      },
                     ),
                     SizedBox(height: 20),
                     TaskaToggleButtons(

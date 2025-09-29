@@ -490,28 +490,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                    /* ElevatedButton(
+                     ElevatedButton(
                       onPressed: () {
-                        /*for(int key in taskBox.keys ) {
-                          taskBox.delete(key);
-                        }*/
+                        for(int key in taskBox.keys ) {
+                          //taskBox.delete(key);
+                          print(taskBox.get(key));
+                        }
 
-                        taskBox.add({
-                          'title': _titleController.text,
-                          'text': _textController.text,
-                          'tag': _selectedTag,
-                          //TODO Уточнить отличия дат ниже \/
-                          'date': DateTime.now(),
-                          //'date': _dateController.text,
-                          //'time': _timeController.text,
-                          'deadlineDate': _deadlineDateController.text,
-                          'deadlineTime': _deadlineTimeController.text,
-                          'priority': _selectedValue,
-                          'isDone': true,
-                        });
+
                       },
                       child: Text("data"),
-                    ),*/
+                    ),
                   ],
                 ),
               ],
