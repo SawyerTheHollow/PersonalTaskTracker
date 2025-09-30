@@ -109,18 +109,19 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                     ),
                     height: 80,
                     child: ListTile(
-                      //TODO Добавить чек-марки
                       leading: Container(
-                        width: 12,
-                        height: 12,
+                        width: 20,
+                        height: 20,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
+                          border: Border.all(color: taskaTextDark),
+                          borderRadius: BorderRadius.circular(5),
+                          color: taskBox.get(task.hiveIndex)['isDone'] == true ? taskaGreen : taskaBackground
                         ),
-                      ), //Чек-марки
+                        child: taskBox.get(task.hiveIndex)['isDone'] == true ? Icon(Icons.check, size: 15, opticalSize: 10,) : null,
+                      ),
                       title: Text(
                         task.title,
-                        style: TextStyle(color: taskaTextDark, fontSize: 17),
+                        style: TextStyle(color: taskaTextDark, fontSize: 17, decoration: taskBox.get(task.hiveIndex)['isDone'] == true ? TextDecoration.lineThrough : null),
                       ),
                       subtitle: RichText(
                         text: TextSpan(

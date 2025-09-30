@@ -27,6 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Task> _getTasksForDay(DateTime day) {
     final List<Task> tasks = [];
+    final List<Task> completedTasks = [];
     final formattedDay = DateFormat('yyyy-MM-dd').format(day).toString();
 
     if (_searchBarController.text != "") {
@@ -47,23 +48,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text.toLowerCase().contains(
                   _searchBarController.text.toLowerCase(),
                 )))
-          tasks.add(
-            Task(
-              title: taskData["title"],
-              text: taskData["text"],
-              tag: taskData["tag"],
-              date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-              //Не нужно на этом экране
-              /*deadlineDate: DateFormat(
+          if (taskData['isDone'] == false) {
+            tasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
               'dd.MM.yyyy',
             ).parse(taskData['deadlineDate']),*/
-              /*deadlineTime: TimeOfDay.fromDateTime(
+                /*deadlineTime: TimeOfDay.fromDateTime(
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
-              priority: taskData["priority"],
-              hiveIndex: key
-            ),
-          );
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          } else {
+            completedTasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+                /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          }
       }
     } else {
       for (final key in taskBox.keys) {
@@ -75,28 +96,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
           'yyyy-MM-dd',
         ).format(preFormattedDate).toString();
         if (formattedDate == formattedDay) {
-          tasks.add(
-            Task(
-              title: taskData["title"],
-              text: taskData["text"],
-              tag: taskData["tag"],
-              date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-              //Не нужно на этом экране
-              /*deadlineDate: DateFormat(
+          if (taskData['isDone'] == false) {
+            tasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
               'dd.MM.yyyy',
             ).parse(taskData['deadlineDate']),*/
-              /*deadlineTime: TimeOfDay.fromDateTime(
+                /*deadlineTime: TimeOfDay.fromDateTime(
               DateFormat('hh:mm').parse(taskData['deadlineTime']),
             ),*/
-              priority: taskData["priority"],
-              hiveIndex: key
-            ),
-          );
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          } else {
+            completedTasks.add(
+              Task(
+                title: taskData["title"],
+                text: taskData["text"],
+                tag: taskData["tag"],
+                date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
+                //Не нужно на этом экране
+                /*deadlineDate: DateFormat(
+              'dd.MM.yyyy',
+            ).parse(taskData['deadlineDate']),*/
+                /*deadlineTime: TimeOfDay.fromDateTime(
+              DateFormat('hh:mm').parse(taskData['deadlineTime']),
+            ),*/
+                priority: taskData["priority"],
+                hiveIndex: key,
+              ),
+            );
+          }
         }
       }
       ;
     }
-    return tasks;
+    return tasks + completedTasks;
   }
 
   //Календарь
@@ -239,7 +280,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 TaskaTitleText(
                   topText: DateFormat('dd MMMM').format(_selectedDay),
                   bottomText:
-                      "${_getTasksForDay(_selectedDay).length} задачи на сегодня",
+                      _getTasksForDay(
+                        _selectedDay,
+                      ).length.toString().endsWith('1')
+                      ? "${_getTasksForDay(_selectedDay).length} задача на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('2')
+                      ? "${_getTasksForDay(_selectedDay).length} задачи на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('3')
+                      ? "${_getTasksForDay(_selectedDay).length} задачи на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('4')
+                      ? "${_getTasksForDay(_selectedDay).length} задачи на сегодня"
+                      : "${_getTasksForDay(_selectedDay).length} задач на сегодня",
                 ),
                 Spacer(),
                 IconButton(
@@ -298,7 +355,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-              child: TaskaTaskList(tasks: _getTasksForDay(_selectedDay)),
+              child: TaskaTaskList(
+                tasks: _getTasksForDay(_selectedDay),
+                onUpdate: () {
+                  setState(() {});
+                },
+              ),
             ),
           ),
         ],

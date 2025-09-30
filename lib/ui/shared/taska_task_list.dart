@@ -1,13 +1,21 @@
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+
+import '../../injection/service_locator.dart';
 
 class TaskaTaskList extends StatefulWidget {
   final List<Task> tasks;
   final bool showCompleted;
+  final VoidCallback? onUpdate;
+
   TaskaTaskList({
     required this.tasks,
     this.showCompleted = false,
+    this.onUpdate
 });
 
 
@@ -18,6 +26,8 @@ class TaskaTaskList extends StatefulWidget {
 class _TaskaTaskListState extends State<TaskaTaskList> {
   @override
   Widget build (BuildContext){
+    var taskBox = getIt<Box>();
+
 
     if (widget.tasks.isEmpty) {
       return Padding(
@@ -32,58 +42,134 @@ class _TaskaTaskListState extends State<TaskaTaskList> {
     }
 
     return SizedBox(
-      height: 400,
       child: ListView.builder(
         itemCount: widget.tasks.length,
         itemBuilder: (context, index) {
           final task = widget.tasks[index];
-          return Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(18),
-              side: BorderSide(color: taskaBorder),
-            ),
-            color: taskaBackground,
-            margin: EdgeInsets.symmetric(vertical: 4),
-            child: Container(
-              height: 80,
-              child: ListTile(
-                //TODO Добавить чек-марки
-                leading: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black,
+              child: Stack(
+                clipBehavior: Clip.antiAlias,
+                children: [
+                  Positioned.fill(
+                    right: 200,
+                    child: Container(color: taskaGreen),
                   ),
-                ), //Чек-марки
-                title: Text(
-                  task.title,
-                  style: TextStyle(color: taskaTextDark, fontSize: 17),
-                ),
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: [
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Icon(
-                          Icons.local_offer_outlined,
-                          size: 15,
-                          color: taskaPurplish,
+                  Positioned.fill(left: 200, child: Container(color: taskaRed)),
+                  Slidable(
+                    startActionPane: ActionPane(
+                      motion: ScrollMotion(),
+                      extentRatio: 0.2,
+                      children: [
+                        CustomSlidableAction(
+                          foregroundColor: taskaBackground,
+                          backgroundColor: taskaGreen,
+                          child: Icon(
+                            Icons.check,
+                            size: 30,
+                            color: taskaBackground,
+                          ),
+                          onPressed: (context) {
+                            setState(() {
+                              taskBox.put(task.hiveIndex, {
+                                'title': taskBox.get(task.hiveIndex)['title'],
+                                'text': taskBox.get(task.hiveIndex)['text'],
+                                'tag': taskBox.get(task.hiveIndex)['tag'],
+                                'date': taskBox.get(task.hiveIndex)['date'],
+                                'deadlineDate': taskBox.get(
+                                  task.hiveIndex,
+                                )['deadlineDate'],
+                                'deadlineTime': taskBox.get(
+                                  task.hiveIndex,
+                                )['deadlineTime'],
+                                'priority': taskBox.get(
+                                  task.hiveIndex,
+                                )['priority'],
+                                'isDone': true,
+                              });
+                              widget.tasks.removeAt(index);
+                              widget.onUpdate!();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    endActionPane: ActionPane(
+                      extentRatio: 0.2,
+                      motion: ScrollMotion(),
+                      children: [
+                        CustomSlidableAction(
+                          foregroundColor: taskaBackground,
+                          backgroundColor: taskaRed,
+                          child: Icon(
+                            Icons.delete,
+                            size: 30,
+                            color: taskaBackground,
+                          ),
+                          onPressed: (context) {
+                            setState(() {
+                              taskBox.delete(task.hiveIndex);
+                              widget.tasks.removeAt(index);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    key: ValueKey(task.hiveIndex),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: taskaBackground,
+                        border: Border.all(color: taskaBorder),
+                      ),
+                      height: 80,
+                      child: ListTile(
+                        leading: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: taskaTextDark),
+                              borderRadius: BorderRadius.circular(5),
+                              color: taskBox.get(task.hiveIndex)['isDone'] == true ? taskaGreen : taskaBackground
+                          ),
+                          child: taskBox.get(task.hiveIndex)['isDone'] == true ? Icon(Icons.check, size: 15, opticalSize: 10,) : null,
+                        ),
+                        title: Text(
+                          task.title,
+                          style: TextStyle(color: taskaTextDark, fontSize: 17, decoration: taskBox.get(task.hiveIndex)['isDone'] == true ? TextDecoration.lineThrough : null),
+                        ),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            children: [
+                              WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: Icon(
+                                  Icons.local_offer_outlined,
+                                  size: 15,
+                                  color: taskaPurplish,
+                                ),
+                              ),
+                              TextSpan(text: " "),
+                              TextSpan(
+                                text: task.tag,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: taskaTextGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.info_outline,
+                          color: Color(0xffafd77e),
                         ),
                       ),
-                      TextSpan(text: " "),
-                      TextSpan(
-                        text: task.tag,
-                        style: TextStyle(fontSize: 15, color: taskaTextGray),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                onTap: () {
-                  //TODO Выделение чек-марка
-                },
-                trailing: Icon(Icons.info_outline, color: Color(0xffafd77e)),
+                ],
               ),
             ),
           );
