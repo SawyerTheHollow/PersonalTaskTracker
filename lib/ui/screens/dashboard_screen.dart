@@ -2,6 +2,7 @@ import 'package:first_flutter_project/injection/service_locator.dart';
 import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
 import 'package:first_flutter_project/ui/screens/tasks_screen.dart';
+import 'package:first_flutter_project/ui/shared/taska_horizontal_calendar.dart';
 import 'package:first_flutter_project/ui/shared/taska_task_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
@@ -222,6 +223,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     entry.remove();
   }
 
+  //Функция обновления значения _selectedDay (для TaskaHorizontalCalendar)
+  void _updateSelectedDay(DateTime newDay) {
+    setState(() {
+      _selectedDay = newDay;
+    });
+  }
+
   //Основная вёрстка
   @override
   Widget build(BuildContext context) {
@@ -314,43 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 20),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 130,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 30,
-                    itemBuilder: (context, index) {
-                      DateTime date = DateTime.now().add(Duration(days: index));
-                      return Container(
-                        width: 60,
-                        margin: EdgeInsets.symmetric(horizontal: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: taskaBorder),
-                          borderRadius: BorderRadius.circular(18),
-                          color: taskaBackground,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              DateFormat.E().format(date),
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              DateFormat.d().format(date),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+            child: TaskaHorizontalCalendar(selectedDay: _selectedDay, onUpdate: _updateSelectedDay,)
           ),
           Expanded(
             child: Padding(

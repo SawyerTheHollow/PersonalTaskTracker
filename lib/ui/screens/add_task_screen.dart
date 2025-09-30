@@ -33,13 +33,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  //Функция для обновления значения _selectedPriority
-  void _updateSelectedPriority(String newPriority) {
-    setState(() {
-      _selectedValue = newPriority;
-    });
-  }
-
   //Функция для валидации текстового поля
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -490,7 +483,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       ),
                     ),
-                     ElevatedButton(
+                    /* ElevatedButton(
                       onPressed: () {
                         for(int key in taskBox.keys ) {
                           //taskBox.delete(key);
@@ -500,7 +493,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                       },
                       child: Text("data"),
-                    ),
+                    ),*/
                   ],
                 ),
               ],
