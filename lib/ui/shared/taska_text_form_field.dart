@@ -32,7 +32,11 @@ class _TaskaTextFormFieldState extends State<TaskaTextFormField> {
       validator: widget.validator,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
-        prefixIcon: widget.prefixIcon,
+        prefixIconConstraints: BoxConstraints(minWidth: 25, minHeight: 25),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 15),
+          child: widget.prefixIcon,
+        ),
         contentPadding: EdgeInsets.all(widget.height),
         labelText: widget.labelText,
         labelStyle: TextStyle(color: taskaTextGray),

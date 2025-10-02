@@ -4,6 +4,7 @@ import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
 import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_toggle_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -49,6 +50,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: SvgPicture.asset("assets/icons/Back arrow.svg", width: 25, height: 25),
+            padding: EdgeInsets.all(10),
+            style: IconButton.styleFrom(
+              side: BorderSide(color: taskaBorder),
+              shape: CircleBorder(),
+              backgroundColor: Colors.transparent,
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         centerTitle: true,
         toolbarHeight: 80,
         title: Text("Добавить задачу"),
@@ -131,10 +148,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       value: "Учёба",
                     ),
                   ],
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: taskaPurplish,
-                    size: 40,
+                  icon: Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: SvgPicture.asset("assets/icons/Arrow - Left 2.svg", width: 25, height: 25),
                   ),
                   onChanged: (String? value) {
                     setState(() {

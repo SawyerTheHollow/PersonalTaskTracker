@@ -8,6 +8,7 @@ import 'package:first_flutter_project/ui/shared/taska_text_form_field.dart';
 import 'package:first_flutter_project/ui/shared/taska_title_text.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -172,10 +173,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   borderRadius: BorderRadius.circular(16.0),
                 ),
                 child: TableCalendar(
-                  onPageChanged: (date){
+                  onPageChanged: (date) {
                     _focusedDay = date;
-                    _monthTitle = DateFormat.MMMM('ru').format(_focusedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_focusedDay).substring(1);
-
+                    _monthTitle =
+                        DateFormat.MMMM(
+                          'ru',
+                        ).format(_focusedDay)[0].toUpperCase() +
+                        DateFormat.MMMM('ru').format(_focusedDay).substring(1);
                   },
                   locale: 'ru_RU',
                   eventLoader: _getTasksForDay,
@@ -207,8 +211,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     headerTitleBuilder: (context, date) {
                       return Text(
                         _monthTitle,
-                          //DateFormat.MMMM('ru').format(_selectedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_selectedDay).substring(1),
-                       // DateFormat('MMMM').format(date),
+                        //DateFormat.MMMM('ru').format(_selectedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_selectedDay).substring(1),
+                        // DateFormat('MMMM').format(date),
                         style: TextStyle(
                           color: taskaPurplish,
                           fontWeight: FontWeight.bold,
@@ -247,15 +251,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: taskaBackground,
       key: _scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(
-          padding: EdgeInsets.only(left: 20),
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TasksScreen()),
-            );
-          },
-          icon: Icon(Icons.arrow_forward_ios),
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: SvgPicture.asset(
+              "assets/icons/Forward arrow.svg",
+              width: 25,
+              height: 25,
+            ),
+            padding: EdgeInsets.all(10),
+            style: IconButton.styleFrom(
+              side: BorderSide(color: taskaBorder),
+              shape: CircleBorder(),
+              backgroundColor: Colors.transparent,
+            ),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TasksScreen()),
+              );
+            },
+          ),
         ),
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
@@ -273,7 +290,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 setState(() {});
               });
             },
-            icon: Icon(Icons.add_box_outlined, size: 35, color: taskaTextDark),
+            icon: SvgPicture.asset(
+              "assets/icons/Plus.svg",
+              width: 30,
+              height: 30,
+            ),
             padding: EdgeInsets.only(right: 20),
           ),
         ],
@@ -286,7 +307,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               controller: _searchBarController,
               labelText: "Что надо сделать?",
               height: 15,
-              prefixIcon: Icon(Icons.search, color: taskaTextDark),
+              prefixIcon: SvgPicture.asset(
+                "assets/icons/Search.svg",
+                width: 25,
+                height: 25,
+              ),
               onChanged: (string) {
                 setState(() {});
               },
@@ -297,7 +322,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               children: [
                 TaskaTitleText(
-                  //topText: "asd",
                   topText: DateFormat.MMMMd('ru').format(_selectedDay),
                   bottomText:
                       _getTasksForDay(
@@ -321,8 +345,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Spacer(),
                 IconButton(
                   onPressed: () => _showOverlay(context),
-                  icon: Icon(Icons.calendar_month, color: taskaTextDark),
-                  iconSize: 30,
+                  icon: SvgPicture.asset(
+                    "assets/icons/Calendar.svg",
+                    width: 25,
+                    height: 25,
+                  ),
+                  padding: EdgeInsets.all(10),
                   style: IconButton.styleFrom(
                     side: BorderSide(color: taskaBorder),
                     shape: CircleBorder(),
@@ -334,7 +362,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 20),
-            child: TaskaHorizontalCalendar(selectedDay: _selectedDay, onUpdate: _updateSelectedDay,)
+            child: TaskaHorizontalCalendar(
+              selectedDay: _selectedDay,
+              onUpdate: _updateSelectedDay,
+            ),
           ),
           Expanded(
             child: Padding(

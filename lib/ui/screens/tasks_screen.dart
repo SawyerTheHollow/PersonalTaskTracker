@@ -5,6 +5,7 @@ import 'package:first_flutter_project/ui/shared/taska_task_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_task_sliver_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_toggle_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -174,12 +175,21 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       backgroundColor: taskaBackground,
       appBar: AppBar(
-        leading: IconButton(
-          padding: EdgeInsets.only(left: 20),
-          onPressed: () async {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: SvgPicture.asset("assets/icons/Back arrow.svg", width: 25, height: 25),
+            padding: EdgeInsets.all(10),
+            style: IconButton.styleFrom(
+              side: BorderSide(color: taskaBorder),
+              shape: CircleBorder(),
+              backgroundColor: Colors.transparent,
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+            },
+          ),
         ),
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
@@ -197,7 +207,12 @@ class _TasksScreenState extends State<TasksScreen> {
                 setState(() {});
               });
             },
-            icon: Icon(Icons.add_box_outlined, size: 35, color: taskaTextDark),
+            icon: SvgPicture.asset(
+              "assets/icons/Plus.svg",
+              width: 30,
+              height: 30,
+            ),
+
             padding: EdgeInsets.only(right: 20),
           ),
         ],
@@ -213,12 +228,16 @@ class _TasksScreenState extends State<TasksScreen> {
                 maxHeight: 150,
                 child: Column(
                   children: [
-                    SizedBox(height: 5,),
+                    SizedBox(height: 5),
                     TaskaTextFormField(
                       labelText: "Что надо сделать?",
                       controller: _searchBarController,
                       height: 15,
-                      prefixIcon: Icon(Icons.search, color: taskaTextDark),
+                      prefixIcon: SvgPicture.asset(
+                        "assets/icons/Search.svg",
+                        width: 25,
+                        height: 25,
+                      ),
                       onChanged: (string) {
                         setState(() {
                           _selectedValue = "Все";
