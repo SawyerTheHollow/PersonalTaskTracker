@@ -145,7 +145,9 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                             TextSpan(
                               text:
                                   "  " +
-                                  DateFormat("d MMMM hh:mm").format(task.date),
+                                  //DateFormat("d MMMM hh:mm").format(task.date),
+                                      DateFormat.MMMMd('ru').format(task.date) + " " +
+                                      DateFormat("hh:mm").format(task.date),
                               style: TextStyle(fontSize: 15, color: taskaRed),
                             ),
                           ],

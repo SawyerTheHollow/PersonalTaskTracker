@@ -25,6 +25,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
   //Задачи
   DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  String _monthTitle = "";
 
   List<Task> _getTasksForDay(DateTime day) {
     final List<Task> tasks = [];
@@ -170,6 +172,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   borderRadius: BorderRadius.circular(16.0),
                 ),
                 child: TableCalendar(
+                  onPageChanged: (date){
+                    _focusedDay = date;
+                    _monthTitle = DateFormat.MMMM('ru').format(_focusedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_focusedDay).substring(1);
+
+                  },
+                  locale: 'ru_RU',
                   eventLoader: _getTasksForDay,
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
@@ -187,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   firstDay: DateTime(2010, 1, 1),
                   lastDay: DateTime(2030, 1, 1),
-                  focusedDay: DateTime.now(),
+                  focusedDay: _focusedDay,
                   rowHeight: 40,
                   headerStyle: HeaderStyle(
                     formatButtonVisible: false,
@@ -198,7 +206,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   calendarBuilders: CalendarBuilders(
                     headerTitleBuilder: (context, date) {
                       return Text(
-                        DateFormat('MMMM').format(date),
+                        _monthTitle,
+                          //DateFormat.MMMM('ru').format(_selectedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_selectedDay).substring(1),
+                       // DateFormat('MMMM').format(date),
                         style: TextStyle(
                           color: taskaPurplish,
                           fontWeight: FontWeight.bold,
@@ -286,7 +296,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               children: [
                 TaskaTitleText(
-                  topText: DateFormat('dd MMMM').format(_selectedDay),
+                  //topText: "asd",
+                  topText: DateFormat.MMMMd('ru').format(_selectedDay),
                   bottomText:
                       _getTasksForDay(
                         _selectedDay,

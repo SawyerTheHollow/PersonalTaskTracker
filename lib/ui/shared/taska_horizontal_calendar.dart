@@ -48,7 +48,6 @@ class _TaskaHorizontalCalendar extends State<TaskaHorizontalCalendar> {
               ),
               onPressed: () {
                 setState(() {
-                  print(date);
                   widget.selectedDay = date;
                   widget.onUpdate!(date);
                 });
@@ -59,7 +58,7 @@ class _TaskaHorizontalCalendar extends State<TaskaHorizontalCalendar> {
                   Text(
                     DateFormat.d().format(date),
                     style: TextStyle(
-                      fontSize: 35,
+                      fontSize: 30,
                       color:
                           DateFormat("MM dd").format(date) ==
                               DateFormat("MM dd").format(widget.selectedDay)
@@ -67,11 +66,11 @@ class _TaskaHorizontalCalendar extends State<TaskaHorizontalCalendar> {
                           : taskaTextGray,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 2),
                   Text(
-                    DateFormat.E().format(date),
+                    DateFormat.E("ru").format(date).toUpperCase(),
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 18,
                       color:
                           DateFormat("MM dd").format(date) ==
                               DateFormat("MM dd").format(widget.selectedDay)

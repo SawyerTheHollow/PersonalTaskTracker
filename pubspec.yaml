@@ -21,6 +21,8 @@ dependencies:
   hive_flutter: ^1.1.0
   custom_check_box: ^0.0.4
   flutter_slidable: ^4.0.3
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

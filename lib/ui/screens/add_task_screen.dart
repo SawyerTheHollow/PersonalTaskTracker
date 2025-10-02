@@ -489,8 +489,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           //taskBox.delete(key);
                           print(taskBox.get(key));
                         }
-
-
                       },
                       child: Text("data"),
                     ),*/
