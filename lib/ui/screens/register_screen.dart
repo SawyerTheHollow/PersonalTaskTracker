@@ -8,6 +8,7 @@ import 'package:first_flutter_project/api/api_client.dart';
 import 'package:first_flutter_project/api/user.dart';
 import 'package:first_flutter_project/ui/screens/login_screen.dart';
 import 'package:first_flutter_project/injection/service_locator.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../shared/palette.dart';
 
@@ -38,6 +39,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         toolbarHeight: 80,
         title: Text("Регистрация"),
         centerTitle: true,
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: SvgPicture.asset("assets/icons/Back arrow.svg", width: 25, height: 25),
+            padding: EdgeInsets.all(10),
+            style: IconButton.styleFrom(
+              side: BorderSide(color: taskaBorder),
+              shape: CircleBorder(),
+              backgroundColor: Colors.transparent,
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+            },
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(20),

@@ -27,7 +27,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   //Задачи
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  String _monthTitle = "";
+  late String _monthTitle =
+      DateFormat.MMMM('ru').format(_focusedDay)[0].toUpperCase() +
+      DateFormat.MMMM('ru').format(_focusedDay).substring(1);
 
   List<Task> _getTasksForDay(DateTime day) {
     final List<Task> tasks = [];
@@ -340,6 +342,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           _selectedDay,
                         ).length.toString().endsWith('4')
                       ? "${_getTasksForDay(_selectedDay).length} задачи на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('11')
+                      ? "${_getTasksForDay(_selectedDay).length} задач на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('12')
+                      ? "${_getTasksForDay(_selectedDay).length} задач на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('13')
+                      ? "${_getTasksForDay(_selectedDay).length} задач на сегодня"
+                      : _getTasksForDay(
+                          _selectedDay,
+                        ).length.toString().endsWith('14')
+                      ? "${_getTasksForDay(_selectedDay).length} задач на сегодня"
                       : "${_getTasksForDay(_selectedDay).length} задач на сегодня",
                 ),
                 Spacer(),
