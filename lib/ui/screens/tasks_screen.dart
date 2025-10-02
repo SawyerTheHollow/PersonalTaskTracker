@@ -175,6 +175,7 @@ class _TasksScreenState extends State<TasksScreen> {
       backgroundColor: taskaBackground,
       appBar: AppBar(
         leading: IconButton(
+          padding: EdgeInsets.only(left: 20),
           onPressed: () async {
             Navigator.pop(context);
           },
@@ -208,10 +209,11 @@ class _TasksScreenState extends State<TasksScreen> {
             SliverPersistentHeader(
               pinned: true,
               delegate: TaskaHeaderDelegate(
-                minHeight: 140,
-                maxHeight: 140,
+                minHeight: 150,
+                maxHeight: 150,
                 child: Column(
                   children: [
+                    SizedBox(height: 5,),
                     TaskaTextFormField(
                       labelText: "Что надо сделать?",
                       controller: _searchBarController,

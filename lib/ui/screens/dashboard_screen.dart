@@ -248,6 +248,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
+          padding: EdgeInsets.only(left: 20),
           onPressed: () async {
             await Navigator.push(
               context,
