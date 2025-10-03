@@ -2,6 +2,7 @@ import 'package:first_flutter_project/models/task.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -49,11 +50,7 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                       CustomSlidableAction(
                         foregroundColor: taskaBackground,
                         backgroundColor: taskaGreen,
-                        child: Icon(
-                          Icons.check,
-                          size: 30,
-                          color: taskaBackground,
-                        ),
+                        child: SvgPicture.asset("assets/icons/check.svg", width: 30, height: 30),
                         onPressed: (context) {
                           setState(() {
                             taskBox.put(task.hiveIndex, {
@@ -86,11 +83,7 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                       CustomSlidableAction(
                         foregroundColor: taskaBackground,
                         backgroundColor: taskaRed,
-                        child: Icon(
-                          Icons.delete,
-                          size: 30,
-                          color: taskaBackground,
-                        ),
+                        child: SvgPicture.asset("assets/icons/delete-3-svgrepo-com 1.svg", width: 30, height: 30),
                         onPressed: (context) {
                           setState(() {
                             taskBox.delete(task.hiveIndex);
@@ -153,12 +146,9 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                           ],
                         ),
                       ),
-                      onTap: () {
-                        //TODO Выделение чек-марка
-                      },
                       trailing: Icon(
                         Icons.info_outline,
-                        color: Color(0xffafd77e),
+                        color: taskaGreen,
                       ),
                     ),
                   ),

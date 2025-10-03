@@ -46,7 +46,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     final String currentDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final String currentTime = DateFormat('hh.mm').format(DateTime.now());
-    //_dateController.text = currentDate;
 
     return Scaffold(
       appBar: AppBar(
