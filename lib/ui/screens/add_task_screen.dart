@@ -19,20 +19,31 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   var taskBox = getIt<Box>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController _titleController = TextEditingController();
   TextEditingController _textController = TextEditingController();
   TextEditingController _tagController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
-  DateTime? _date = null;
   TextEditingController _timeController = TextEditingController();
-  TimeOfDay? _time = TimeOfDay.now();
   TextEditingController _deadlineDateController = TextEditingController();
   TextEditingController _deadlineTimeController = TextEditingController();
-  String _selectedTag = "Без тега";
-  String _selectedValue = "Низкий";
-  bool _showDeadlineForms = false;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  DateTime? _date;
+  TimeOfDay? _time;
+  late String _selectedTag;
+  late String _selectedValue;
+  late bool _showDeadlineForms;
+
+  @override
+  void initState() {
+    super.initState();
+    _date = null;
+    _time = TimeOfDay.now();
+    _selectedTag = "Без тега";
+    _selectedValue = "Низкий";
+    _showDeadlineForms = false;
+  }
 
   //Функция для валидации текстового поля
   String? _validator(String? value) {
