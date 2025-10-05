@@ -1,14 +1,10 @@
-import 'package:first_flutter_project/app.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
-import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
-import 'package:first_flutter_project/ui/shared/taska_task_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_task_sliver_list.dart';
 import 'package:first_flutter_project/ui/shared/taska_toggle_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-
 import '../../injection/service_locator.dart';
 import '../../models/task.dart';
 import '../shared/taska_text_form_field.dart';
@@ -21,11 +17,18 @@ class TasksScreen extends StatefulWidget {
   _TasksScreenState createState() => _TasksScreenState();
 }
 
-String _selectedValue = "Все";
-TextEditingController _searchBarController = TextEditingController();
-
 class _TasksScreenState extends State<TasksScreen> {
   final taskBox = getIt<Box>();
+
+  TextEditingController _searchBarController = TextEditingController();
+
+  late String _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = "Все";
+  }
 
   List<Task> _getAllTasks(String selectedValue) {
     List<Task> tasks = [];
@@ -179,7 +182,11 @@ class _TasksScreenState extends State<TasksScreen> {
         leading: Padding(
           padding: EdgeInsets.only(left: 20.0),
           child: IconButton(
-            icon: SvgPicture.asset("assets/icons/Back arrow.svg", width: 25, height: 25),
+            icon: SvgPicture.asset(
+              "assets/icons/Back arrow.svg",
+              width: 25,
+              height: 25,
+            ),
             padding: EdgeInsets.all(10),
             style: IconButton.styleFrom(
               side: BorderSide(color: taskaBorder),
