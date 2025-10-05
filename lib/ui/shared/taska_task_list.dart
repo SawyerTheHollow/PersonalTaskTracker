@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
-
 import '../../injection/service_locator.dart';
 
 class TaskaTaskList extends StatefulWidget {
@@ -19,17 +17,15 @@ class TaskaTaskList extends StatefulWidget {
     this.onUpdate
 });
 
-
   @override
   _TaskaTaskListState createState() => _TaskaTaskListState();
 }
 
 class _TaskaTaskListState extends State<TaskaTaskList> {
+  final taskBox = getIt<Box>();
+
   @override
   Widget build (BuildContext){
-    var taskBox = getIt<Box>();
-
-
     if (widget.tasks.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(16),
