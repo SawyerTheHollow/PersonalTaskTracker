@@ -24,13 +24,22 @@ TextEditingController _searchBarController = TextEditingController();
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
-  //Задачи
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-  late String _monthTitle =
-      DateFormat.MMMM('ru').format(_focusedDay)[0].toUpperCase() +
-      DateFormat.MMMM('ru').format(_focusedDay).substring(1);
 
+  late DateTime _selectedDay;
+  late DateTime _focusedDay;
+  late String _monthTitle;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = DateTime.now();
+    _focusedDay = DateTime.now();
+    _monthTitle =
+        DateFormat.MMMM('ru').format(_focusedDay)[0].toUpperCase() +
+        DateFormat.MMMM('ru').format(_focusedDay).substring(1);
+  }
+
+  //Задачи
   List<Task> _getTasksForDay(DateTime day) {
     final List<Task> tasks = [];
     final List<Task> completedTasks = [];
@@ -47,6 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final formattedDate = DateFormat(
           'yyyy-MM-dd',
         ).format(preFormattedDate).toString();
+
         if (formattedDate == formattedDay &&
             (title.toLowerCase().contains(
                   _searchBarController.text.toLowerCase(),
@@ -54,6 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text.toLowerCase().contains(
                   _searchBarController.text.toLowerCase(),
                 )))
+
           if (taskData['isDone'] == false) {
             tasks.add(
               Task(
@@ -101,7 +112,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final formattedDate = DateFormat(
           'yyyy-MM-dd',
         ).format(preFormattedDate).toString();
+
         if (formattedDate == formattedDay) {
+
           if (taskData['isDone'] == false) {
             tasks.add(
               Task(
@@ -213,8 +226,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     headerTitleBuilder: (context, date) {
                       return Text(
                         _monthTitle,
-                        //DateFormat.MMMM('ru').format(_selectedDay)[0].toUpperCase() + DateFormat.MMMM('ru').format(_selectedDay).substring(1),
-                        // DateFormat('MMMM').format(date),
                         style: TextStyle(
                           color: taskaPurplish,
                           fontWeight: FontWeight.bold,
