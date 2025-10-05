@@ -22,18 +22,23 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-final _formKey = GlobalKey<FormState>();
-
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final apiClient = getIt<ApiClient>();
+  final secureStorage = getIt<FlutterSecureStorage>();
+  final _formKey = GlobalKey<FormState>();
+
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController(text: widget.registeredEmail ?? "");
+    _passwordController = TextEditingController(text: widget.registeredPassword ?? "");
+  }
 
   @override
   Widget build(BuildContext context) {
-    _emailController.text = widget.registeredEmail ?? "";
-    _passwordController.text = widget.registeredPassword ?? "";
-    final apiClient = getIt<ApiClient>();
-    final secureStorage = getIt<FlutterSecureStorage>();
     return Scaffold(
       backgroundColor: taskaBackground,
       appBar: AppBar(
