@@ -20,10 +20,10 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-TextEditingController _searchBarController = TextEditingController();
-
 class _DashboardScreenState extends State<DashboardScreen> {
   final taskBox = getIt<Box>();
+
+  final _searchBarController = TextEditingController();
 
   late DateTime _selectedDay;
   late DateTime _focusedDay;
