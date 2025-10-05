@@ -21,9 +21,15 @@ class TaskaToggleButtons extends StatefulWidget {
   _TaskaToggleButtonsState createState() => _TaskaToggleButtonsState();
 }
 
-String _currentValue = '';
-
 class _TaskaToggleButtonsState extends State<TaskaToggleButtons> {
+  late String _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_currentValue == '') {
