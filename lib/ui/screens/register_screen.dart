@@ -19,16 +19,23 @@ class RegisterScreen extends StatefulWidget {
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-final RegExp emailRegex = RegExp(
-  r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-);
-
-final _formKey = GlobalKey<FormState>();
-TextEditingController _nameController = TextEditingController();
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
-
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  late final RegExp emailRegex;
+
+  @override
+  void initState() {
+    super.initState();
+    emailRegex = RegExp(
+      r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final apiClient = getIt<ApiClient>();
