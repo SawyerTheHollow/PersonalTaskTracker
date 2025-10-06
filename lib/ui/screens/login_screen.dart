@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: taskaBackground,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: taskaBackground,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
         title: Text("Вход"),

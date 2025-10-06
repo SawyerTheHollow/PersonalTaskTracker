@@ -64,7 +64,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text.toLowerCase().contains(
                   _searchBarController.text.toLowerCase(),
                 )))
-
           if (taskData['isDone'] == false) {
             tasks.add(
               Task(
@@ -114,7 +113,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ).format(preFormattedDate).toString();
 
         if (formattedDate == formattedDay) {
-
           if (taskData['isDone'] == false) {
             tasks.add(
               Task(
@@ -264,6 +262,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: taskaBackground,
       key: _scaffoldKey,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
+        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
+        centerTitle: true,
+        backgroundColor: taskaBackground,
         leadingWidth: 70,
         leading: Padding(
           padding: EdgeInsets.only(left: 20.0),
@@ -287,12 +291,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
         ),
-        scrolledUnderElevation: 0,
-        toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        title: Text("Мои задачи", style: TextStyle(color: taskaTextDark)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
             onPressed: () async {

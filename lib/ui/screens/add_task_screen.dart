@@ -60,6 +60,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        toolbarHeight: 80,
+        title: Text("Добавить задачу"),
+        backgroundColor: taskaBackground,
+        centerTitle: true,
         leadingWidth: 70,
         leading: Padding(
           padding: EdgeInsets.only(left: 20.0),
@@ -76,10 +81,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             },
           ),
         ),
-        centerTitle: true,
-        toolbarHeight: 80,
-        title: Text("Добавить задачу"),
-        backgroundColor: taskaBackground,
       ),
       backgroundColor: taskaBackground,
       body: SingleChildScrollView(

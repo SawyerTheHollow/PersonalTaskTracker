@@ -42,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       backgroundColor: taskaBackground,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: taskaBackground,
         toolbarHeight: 80,
         title: Text("Регистрация"),
         centerTitle: true,

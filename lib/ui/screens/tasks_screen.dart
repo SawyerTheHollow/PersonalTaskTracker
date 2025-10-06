@@ -178,6 +178,12 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       backgroundColor: taskaBackground,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
+        title: Text("Задачи", style: TextStyle(color: taskaTextDark)),
+        centerTitle: true,
+        backgroundColor: taskaBackground,
         leadingWidth: 70,
         leading: Padding(
           padding: EdgeInsets.only(left: 20.0),
@@ -198,12 +204,7 @@ class _TasksScreenState extends State<TasksScreen> {
             },
           ),
         ),
-        scrolledUnderElevation: 0,
-        toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        title: Text("Задачи", style: TextStyle(color: taskaTextDark)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+
         actions: [
           IconButton(
             onPressed: () async {
