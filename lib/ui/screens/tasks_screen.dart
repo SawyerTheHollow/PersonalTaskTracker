@@ -297,7 +297,12 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             ),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            TaskaTaskSliverList(tasks: _getCompletedTasks()),
+            TaskaTaskSliverList(
+              tasks: _getCompletedTasks(),
+              onUpdate: () {
+                setState(() {});
+              },
+            ),
           ],
         ),
       ),
