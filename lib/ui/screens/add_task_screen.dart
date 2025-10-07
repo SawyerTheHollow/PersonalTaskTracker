@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:custom_check_box/custom_check_box.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
@@ -28,7 +26,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _textController = TextEditingController();
-  TextEditingController _tagController = TextEditingController();
+ // TextEditingController _tagController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
   TextEditingController _finishAtDateController = TextEditingController();
@@ -57,9 +55,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       if (widget.taskToRedact!.text != null) {
         _textController.text = widget.taskToRedact!.text!;
       }
-      if (widget.taskToRedact!.tag != null) {
-        _selectedTag = widget.taskToRedact!.tag!;
-      }
       if (widget.taskToRedact!.finishAt != null) {
         _finishAtDateController.text = DateFormat(
           'dd.MM.yyyy',
@@ -68,10 +63,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           "hh:mm",
         ).format(widget.taskToRedact!.finishAt!);
       }
+      //_tagController.text = widget.taskToRedact!.tag!;
+      _selectedTag = widget.taskToRedact!.tag!;
       _dateController.text = DateFormat("dd.MM.yyyy").format(widget.taskToRedact!.date);
       _date = widget.taskToRedact!.date;
       _timeController.text = DateFormat("hh:mm").format(widget.taskToRedact!.date);
       _time = TimeOfDay.fromDateTime(widget.taskToRedact!.date);
+
       _selectedValue = widget.taskToRedact!.priority;
     }
   }
@@ -158,6 +156,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 SizedBox(height: 15),
                 DropdownButtonFormField(
+                  initialValue: widget.taskToRedact != null ? widget.taskToRedact!.tag! : "Без тега",
                   hint: Text(
                     "Без тега",
                     style: TextStyle(color: taskaTextGray, fontSize: 16),
@@ -166,7 +165,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     DropdownMenuItem(
                       child: Text(
                         "Без тега",
-                        style: TextStyle(color: taskaTextDark),
+                        style: TextStyle(color: taskaTextGray),
                       ),
                       value: "Без тега",
                     ),
@@ -209,8 +208,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _tagController.text = value ?? "";
-                      _selectedTag = _tagController.text;
+                      //_tagController.text = value ?? "";
+                     // _selectedTag = _tagController.text;
+                      _selectedTag = value ?? "";
+
                     });
                   },
                   decoration: InputDecoration(
