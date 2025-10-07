@@ -1,4 +1,5 @@
 import 'package:first_flutter_project/models/task.dart';
+import 'package:first_flutter_project/ui/screens/add_task_screen.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -13,7 +14,11 @@ class TaskaTaskSliverList extends StatefulWidget {
   final bool showCompleted;
   final VoidCallback? onUpdate;
 
-  TaskaTaskSliverList({required this.tasks, this.showCompleted = false, this.onUpdate});
+  TaskaTaskSliverList({
+    required this.tasks,
+    this.showCompleted = false,
+    this.onUpdate,
+  });
 
   @override
   _TaskaTaskSliverListState createState() => _TaskaTaskSliverListState();
@@ -50,7 +55,11 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                       CustomSlidableAction(
                         foregroundColor: taskaBackground,
                         backgroundColor: taskaGreen,
-                        child: SvgPicture.asset("assets/icons/check.svg", width: 30, height: 30),
+                        child: SvgPicture.asset(
+                          "assets/icons/check.svg",
+                          width: 30,
+                          height: 30,
+                        ),
                         onPressed: (context) {
                           setState(() {
                             taskBox.put(task.hiveIndex, {
@@ -83,7 +92,11 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                       CustomSlidableAction(
                         foregroundColor: taskaBackground,
                         backgroundColor: taskaRed,
-                        child: SvgPicture.asset("assets/icons/delete-3-svgrepo-com 1.svg", width: 30, height: 30),
+                        child: SvgPicture.asset(
+                          "assets/icons/delete-3-svgrepo-com 1.svg",
+                          width: 30,
+                          height: 30,
+                        ),
                         onPressed: (context) {
                           setState(() {
                             taskBox.delete(task.hiveIndex);
@@ -102,19 +115,38 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                     ),
                     height: 80,
                     child: ListTile(
+                      onLongPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddTaskScreen(taskToRedact: task, callback: widget.onUpdate,),
+                          ),
+                        );
+                      },
                       leading: Container(
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
                           border: Border.all(color: taskaTextDark),
                           borderRadius: BorderRadius.circular(5),
-                          color: taskBox.get(task.hiveIndex)['isDone'] == true ? taskaGreen : taskaBackground
+                          color: taskBox.get(task.hiveIndex)['isDone'] == true
+                              ? taskaGreen
+                              : taskaBackground,
                         ),
-                        child: taskBox.get(task.hiveIndex)['isDone'] == true ? Icon(Icons.check, size: 15, opticalSize: 10,) : null,
+                        child: taskBox.get(task.hiveIndex)['isDone'] == true
+                            ? Icon(Icons.check, size: 15, opticalSize: 10)
+                            : null,
                       ),
                       title: Text(
                         task.title,
-                        style: TextStyle(color: taskaTextDark, fontSize: 17, decoration: taskBox.get(task.hiveIndex)['isDone'] == true ? TextDecoration.lineThrough : null),
+                        style: TextStyle(
+                          color: taskaTextDark,
+                          fontSize: 17,
+                          decoration:
+                              taskBox.get(task.hiveIndex)['isDone'] == true
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
                       ),
                       subtitle: RichText(
                         text: TextSpan(
@@ -139,17 +171,15 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                               text:
                                   "  " +
                                   //DateFormat("d MMMM hh:mm").format(task.date),
-                                      DateFormat.MMMMd('ru').format(task.date) + " " +
-                                      DateFormat("hh:mm").format(task.date),
+                                  DateFormat.MMMMd('ru').format(task.date) +
+                                  " " +
+                                  DateFormat("hh:mm").format(task.date),
                               style: TextStyle(fontSize: 15, color: taskaRed),
                             ),
                           ],
                         ),
                       ),
-                      trailing: Icon(
-                        Icons.info_outline,
-                        color: taskaGreen,
-                      ),
+                      trailing: Icon(Icons.info_outline, color: taskaGreen),
                     ),
                   ),
                 ),

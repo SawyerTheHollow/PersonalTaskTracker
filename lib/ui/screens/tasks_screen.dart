@@ -11,7 +11,8 @@ import '../shared/taska_text_form_field.dart';
 import 'add_task_screen.dart';
 
 class TasksScreen extends StatefulWidget {
-  TasksScreen({Key? key});
+  final VoidCallback? onUpdate;
+  TasksScreen({Key? key, this.onUpdate});
 
   @override
   _TasksScreenState createState() => _TasksScreenState();
@@ -200,6 +201,7 @@ class _TasksScreenState extends State<TasksScreen> {
               backgroundColor: Colors.transparent,
             ),
             onPressed: () async {
+              widget.onUpdate?.call();
               Navigator.pop(context);
             },
           ),

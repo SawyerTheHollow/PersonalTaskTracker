@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../injection/service_locator.dart';
+import '../screens/add_task_screen.dart';
 
 class TaskaTaskList extends StatefulWidget {
   final List<Task> tasks;
@@ -115,6 +116,14 @@ class _TaskaTaskListState extends State<TaskaTaskList> {
                       ),
                       height: 80,
                       child: ListTile(
+                        onLongPress: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddTaskScreen(taskToRedact: task, callback: widget.onUpdate,),
+                            ),
+                          );
+                        },
                         leading: Container(
                           width: 20,
                           height: 20,

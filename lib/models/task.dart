@@ -9,8 +9,8 @@ class Task extends HiveObject {
   final String? tag;
   final DateTime date;
   //final TimeOfDay? time;
-  final DateTime? deadlineDate;
-  final TimeOfDay? deadlineTime;
+  final DateTime? finishAt;
+  //final TimeOfDay? deadlineTime;
   final String priority;
   bool isDone;
   final dynamic hiveIndex;
@@ -22,8 +22,8 @@ class Task extends HiveObject {
     //this.time,
     this.text,
     this.tag,
-    this.deadlineDate,
-    this.deadlineTime,
+    this.finishAt,
+    //this.deadlineTime,
     this.isDone = false,
     required this.hiveIndex
   });

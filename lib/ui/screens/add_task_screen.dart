@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:custom_check_box/custom_check_box.dart';
 import 'package:first_flutter_project/ui/shared/palette.dart';
 import 'package:first_flutter_project/ui/shared/taska_elevated_button.dart';
@@ -9,9 +11,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../injection/service_locator.dart';
+import '../../models/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  AddTaskScreen({Key? key});
+  final Task? taskToRedact;
+  final VoidCallback? callback;
+  AddTaskScreen({Key? key, this.taskToRedact, this.callback});
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -26,11 +31,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   TextEditingController _tagController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
-  TextEditingController _deadlineDateController = TextEditingController();
-  TextEditingController _deadlineTimeController = TextEditingController();
+  TextEditingController _finishAtDateController = TextEditingController();
+  TextEditingController _finishAtTimeController = TextEditingController();
 
   DateTime? _date;
   TimeOfDay? _time;
+  DateTime? _finishAtDate;
+  TimeOfDay? _finishAtTime;
+
   late String _selectedTag;
   late String _selectedValue;
   late bool _showDeadlineForms;
@@ -43,6 +51,29 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     _selectedTag = "Без тега";
     _selectedValue = "Низкий";
     _showDeadlineForms = false;
+
+    if (widget.taskToRedact != null) {
+      _titleController.text = widget.taskToRedact!.title;
+      if (widget.taskToRedact!.text != null) {
+        _textController.text = widget.taskToRedact!.text!;
+      }
+      if (widget.taskToRedact!.tag != null) {
+        _selectedTag = widget.taskToRedact!.tag!;
+      }
+      if (widget.taskToRedact!.finishAt != null) {
+        _finishAtDateController.text = DateFormat(
+          'dd.MM.yyyy',
+        ).format(widget.taskToRedact!.finishAt!);
+        _finishAtTimeController.text = DateFormat(
+          "hh:mm",
+        ).format(widget.taskToRedact!.finishAt!);
+      }
+      _dateController.text = DateFormat("dd.MM.yyyy").format(widget.taskToRedact!.date);
+      _date = widget.taskToRedact!.date;
+      _timeController.text = DateFormat("hh:mm").format(widget.taskToRedact!.date);
+      _time = TimeOfDay.fromDateTime(widget.taskToRedact!.date);
+      _selectedValue = widget.taskToRedact!.priority;
+    }
   }
 
   //Функция для валидации текстового поля
@@ -55,6 +86,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     final String currentDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
     final String currentTime = DateFormat('hh.mm').format(DateTime.now());
 
@@ -62,14 +94,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         toolbarHeight: 80,
-        title: Text("Добавить задачу"),
+        title: Text(
+          widget.taskToRedact == null
+              ? "Добавить задачу"
+              : "Редактирование задачи",
+        ),
         backgroundColor: taskaBackground,
         centerTitle: true,
         leadingWidth: 70,
         leading: Padding(
           padding: EdgeInsets.only(left: 20.0),
           child: IconButton(
-            icon: SvgPicture.asset("assets/icons/Back arrow.svg", width: 25, height: 25),
+            icon: SvgPicture.asset(
+              "assets/icons/Back arrow.svg",
+              width: 25,
+              height: 25,
+            ),
             padding: EdgeInsets.all(10),
             style: IconButton.styleFrom(
               side: BorderSide(color: taskaBorder),
@@ -161,7 +201,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ],
                   icon: Padding(
                     padding: EdgeInsets.only(right: 20),
-                    child: SvgPicture.asset("assets/icons/Arrow - Left 2.svg", width: 25, height: 25),
+                    child: SvgPicture.asset(
+                      "assets/icons/Arrow - Left 2.svg",
+                      width: 25,
+                      height: 25,
+                    ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
@@ -234,7 +278,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   'dd.MM.yyyy',
                                 ).format(picked!);
                                 _date = picked;
-                                //_date = DateFormat('yyyy-MM-dd').format(picked);
                               },
                             ),
                           ],
@@ -370,7 +413,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: _deadlineDateController,
+                                controller: _finishAtDateController,
                                 onTap: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
@@ -378,9 +421,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     firstDate: DateTime(2000),
                                     lastDate: DateTime(2100),
                                   );
-                                  _deadlineDateController.text = DateFormat(
+                                  _finishAtDateController.text = DateFormat(
                                     'dd.MM.yyyy',
                                   ).format(picked!);
+                                  _finishAtDate = picked;
                                 },
                               ),
                             ],
@@ -425,7 +469,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: _deadlineTimeController,
+                                controller: _finishAtTimeController,
                                 onTap: () async {
                                   final TimeOfDay? picked =
                                       await showTimePicker(
@@ -439,8 +483,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   final minute = picked?.minute
                                       .toString()
                                       .padLeft(2, '0');
-                                  _deadlineTimeController.text =
+                                  _finishAtTimeController.text =
                                       '$hour:$minute';
+                                  _finishAtTime = picked;
                                 },
                               ),
                             ],
@@ -474,7 +519,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     SizedBox(
                       width: 250,
                       child: TaskaElevatedButton(
-                        text: "Добавить",
+                        text: widget.taskToRedact == null
+                            ? "Добавить"
+                            : "Сохранить",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final dateAndTimeCombined = DateTime(
@@ -484,19 +531,46 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               _time!.hour,
                               _time!.minute,
                             ).toUtc().toIso8601String();
-                            taskBox.add({
-                              'title': _titleController.text,
-                              'text': _textController.text,
-                              'tag': _selectedTag,
-                              //TODO Уточнить отличия дат ниже \/
-                              'date': dateAndTimeCombined,
-                              //'date': _dateController.text,
-                              //'time': _timeController.text,
-                              'deadlineDate': _deadlineDateController.text,
-                              'deadlineTime': _deadlineTimeController.text,
-                              'priority': _selectedValue,
-                              'isDone': false,
-                            });
+
+                            String finishAtDateAndTimeCombined = "";
+                            if (_finishAtDate != null) {
+                              finishAtDateAndTimeCombined = DateTime(
+                                _finishAtDate!.year,
+                                _finishAtDate!.month,
+                                _finishAtDate!.day,
+                                _finishAtTime!.hour,
+                                _finishAtTime!.minute,
+                              ).toUtc().toIso8601String();
+                            }
+
+                            if (widget.taskToRedact == null) {
+                              taskBox.add({
+                                'title': _titleController.text,
+                                'text': _textController.text,
+                                'tag': _selectedTag,
+                                //TODO Уточнить отличия дат ниже \/
+                                'date': dateAndTimeCombined,
+                                //'date': _dateController.text,
+                                //'time': _timeController.text,
+                                'finishAt': finishAtDateAndTimeCombined ,
+                                //'deadlineTime': _finishAtTimeController.text,
+                                'priority': _selectedValue,
+                                'isDone': false,
+                              });
+                            } else {
+                              taskBox.put(widget.taskToRedact!.hiveIndex, {
+                                'title': _titleController.text,
+                                'text': _textController.text,
+                                'tag': _selectedTag,
+                                //TODO Уточнить отличия дат ниже \/
+                                'date': dateAndTimeCombined,
+                                'finishAt': finishAtDateAndTimeCombined,
+                                'priority': _selectedValue,
+                                'isDone': false,
+                              });
+                            }
+
+                            widget.callback?.call();
                             Navigator.pop(context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -511,11 +585,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ),
                     /* ElevatedButton(
-                      onPressed: () {
-                        for(int key in taskBox.keys ) {
-                          //taskBox.delete(key);
-                          print(taskBox.get(key));
-                        }
+                      onPressed: () async {
+
+                          final TimeOfDay? picked =
+                              await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          final hour = picked?.hour.toString().padLeft(
+                            2,
+                            '0',
+                          );
+                          final minute = picked?.minute
+                              .toString()
+                              .padLeft(2, '0');
+                          _deadlineTimeController.text =
+                          '$hour:$minute';
+                          print(hour);
+                          print(minute);
+                          print("minute");
                       },
                       child: Text("data"),
                     ),*/

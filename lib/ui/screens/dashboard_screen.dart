@@ -14,7 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key? key});
+  //final VoidCallback? callback;
+  DashboardScreen({Key? key, /*this.callback*/});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -71,13 +72,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text: taskData["text"],
                 tag: taskData["tag"],
                 date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-                //Не нужно на этом экране
-                /*deadlineDate: DateFormat(
-              'dd.MM.yyyy',
-            ).parse(taskData['deadlineDate']),*/
-                /*deadlineTime: TimeOfDay.fromDateTime(
-              DateFormat('hh:mm').parse(taskData['deadlineTime']),
-            ),*/
                 priority: taskData["priority"],
                 hiveIndex: key,
               ),
@@ -89,13 +83,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text: taskData["text"],
                 tag: taskData["tag"],
                 date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-                //Не нужно на этом экране
-                /*deadlineDate: DateFormat(
-              'dd.MM.yyyy',
-            ).parse(taskData['deadlineDate']),*/
-                /*deadlineTime: TimeOfDay.fromDateTime(
-              DateFormat('hh:mm').parse(taskData['deadlineTime']),
-            ),*/
                 priority: taskData["priority"],
                 hiveIndex: key,
               ),
@@ -120,13 +107,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text: taskData["text"],
                 tag: taskData["tag"],
                 date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-                //Не нужно на этом экране
-                /*deadlineDate: DateFormat(
-              'dd.MM.yyyy',
-            ).parse(taskData['deadlineDate']),*/
-                /*deadlineTime: TimeOfDay.fromDateTime(
-              DateFormat('hh:mm').parse(taskData['deadlineTime']),
-            ),*/
                 priority: taskData["priority"],
                 hiveIndex: key,
               ),
@@ -138,13 +118,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 text: taskData["text"],
                 tag: taskData["tag"],
                 date: DateFormat('yyyy-MM-dd').parse(taskData['date']),
-                //Не нужно на этом экране
-                /*deadlineDate: DateFormat(
-              'dd.MM.yyyy',
-            ).parse(taskData['deadlineDate']),*/
-                /*deadlineTime: TimeOfDay.fromDateTime(
-              DateFormat('hh:mm').parse(taskData['deadlineTime']),
-            ),*/
                 priority: taskData["priority"],
                 hiveIndex: key,
               ),
@@ -286,7 +259,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () async {
               await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TasksScreen()),
+                MaterialPageRoute(builder: (context) => TasksScreen(onUpdate: () => setState(() {}))),
               );
             },
           ),
