@@ -123,11 +123,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           email: _emailController.text,
                           password: _passwordController.text,
                         );
+                        showDialog(context: context, builder: (context){return Center(child: CircularProgressIndicator(),);});
                         try {
                           final registeredUser = await apiClient.registerUser(
                             userToRegister,
                           );
-                          print(registeredUser.toJson());
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -150,10 +150,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             final errorJson =
                                 e.response!.data as Map<String, dynamic>;
                             final error = ErrorResponse.fromJson(errorJson);
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(error.detail ?? "Null")),
                             );
                           } else {
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(e.message ?? "Null")),
                             );

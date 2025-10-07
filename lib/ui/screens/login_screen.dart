@@ -90,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "Вход",
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        showDialog(context: context, builder: (context){return Center(child: CircularProgressIndicator());});
                         try {
                           var userTockens = await apiClient.loginUser(
                             _emailController.text,
@@ -107,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             accessToken: "",
                             refreshToken: "",
                           );
+                          Navigator.of(context).pop();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -119,10 +121,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             final errorJson =
                                 e.response!.data as Map<String, dynamic>;
                             final error = ErrorResponse.fromJson(errorJson);
+
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(error.detail ?? "")),
                             );
                           } else {
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(e.message ?? "")),
                             );
@@ -172,6 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 30,),
             TaskaElevatedButton(
               onPressed: () async {
                 Navigator.push(
