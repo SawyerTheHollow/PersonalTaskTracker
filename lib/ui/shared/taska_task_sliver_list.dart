@@ -129,11 +129,11 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                         decoration: BoxDecoration(
                           border: Border.all(color: taskaTextDark),
                           borderRadius: BorderRadius.circular(5),
-                          color: taskBox.get(task.hiveIndex)['isDone'] == true
+                          color: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? taskaRed : taskBox.get(task.hiveIndex)['isDone'] == true
                               ? taskaGreen
-                              : taskaBackground,
+                              : taskaBackground
                         ),
-                        child: taskBox.get(task.hiveIndex)['isDone'] == true
+                        child: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? Icon(Icons.close, size: 15, opticalSize: 10) : taskBox.get(task.hiveIndex)['isDone'] == true
                             ? Icon(Icons.check, size: 15, opticalSize: 10)
                             : null,
                       ),
@@ -179,7 +179,7 @@ class _TaskaTaskSliverListState extends State<TaskaTaskSliverList> {
                           ],
                         ),
                       ),
-                      trailing: Icon(Icons.info_outline, color: taskaGreen),
+                      trailing: Icon(Icons.info_outline, color: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? taskaRed : taskaGreen),
                     ),
                   ),
                 ),

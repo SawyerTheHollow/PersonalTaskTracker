@@ -130,9 +130,13 @@ class _TaskaTaskListState extends State<TaskaTaskList> {
                           decoration: BoxDecoration(
                               border: Border.all(color: taskaTextDark),
                               borderRadius: BorderRadius.circular(5),
-                              color: taskBox.get(task.hiveIndex)['isDone'] == true ? taskaGreen : taskaBackground
+                              color: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? taskaRed : taskBox.get(task.hiveIndex)['isDone'] == true
+                                  ? taskaGreen
+                                  : taskaBackground
                           ),
-                          child: taskBox.get(task.hiveIndex)['isDone'] == true ? Icon(Icons.check, size: 15, opticalSize: 10,) : null,
+                          child: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? Icon(Icons.close, size: 15, opticalSize: 10) : taskBox.get(task.hiveIndex)['isDone'] == true
+                              ? Icon(Icons.check, size: 15, opticalSize: 10)
+                              : null,
                         ),
                         title: Text(
                           task.title,
@@ -160,10 +164,7 @@ class _TaskaTaskListState extends State<TaskaTaskList> {
                             ],
                           ),
                         ),
-                        trailing: Icon(
-                          Icons.info_outline,
-                          color: Color(0xffafd77e),
-                        ),
+                        trailing: Icon(Icons.info_outline, color: task.date.isBefore(DateTime.now()) && taskBox.get(task.hiveIndex)['isDone'] == false ? taskaRed : taskaGreen),
                       ),
                     ),
                   ),
